@@ -67,7 +67,6 @@ export const Input = ({
       name={label}
       disabled={disabled}
       isOptional={isOptional}
-      className="font-poppins"
       labelStyle={clsx(labelStyle)}
     >
       <div
@@ -87,7 +86,7 @@ export const Input = ({
           id={name}
           disabled={disabled}
           className={clsx(
-            'w-full outline-none text-sm font-poppins disabled:text-dark-grey rounded bg-transparent',
+            'w-full outline-none text-sm disabled:text-dark-grey rounded bg-transparent',
             inputPlaceholderClassesVariant[variantPlaceholder]
           )}
           autoComplete="off"

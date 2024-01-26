@@ -34,7 +34,6 @@ export const Paragraph = ({
   return (
     <p
       className={clsx(
-        'font-poppins',
         ParagraphClassesSize[size],
         {
           'text-dark-primary': !disabled && !hasError,
