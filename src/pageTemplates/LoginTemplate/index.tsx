@@ -13,16 +13,22 @@ const validationSchema = Yup.object().shape({
 });
 
 export const LoginTemplate = () => {
-  // const [inputEmail, setInputEmail] = useState("");
-  // const [inputPassword, setInputPassword] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const initialValues = {
     email: "",
     password: "",
   };
-  const handleEmailAndPassword = (values) => {
-    console.log("minha senha:", values.password);
-    console.log("meu email:", values.email);
+  const handleEmailAndPassword = (values, { resetForm }) => {
+    setInputEmail(values.email);
+    setInputPassword(values.password);
+
+    console.log("email digitado", inputEmail);
+    console.log("senha digitada:", inputPassword);
+
+    resetForm();
   };
   return (
     <Formik
