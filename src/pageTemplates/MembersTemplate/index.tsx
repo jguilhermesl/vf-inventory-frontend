@@ -1,31 +1,30 @@
-import { Button } from "@/components/Button";
-import { Heading } from "@/components/Heading";
 import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Heading } from "../../components/Heading";
+import { Table } from "../../components/Table";
 import { Paragraph } from "@/components/Paragraph";
-import { Table } from "@/components/Table";
-import { MOCK_PRODUCTS } from "@/constants/products";
-import { PlusCircle } from "phosphor-react";
+import { Button } from "@/components/Button";
 import { useState } from "react";
+import { MOCK_MEMBERS } from "@/constants/members";
+import { PlusCircle } from "phosphor-react";
 
-export const ProductsTemplate = () => {
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
-
+export const MembersTemplate = () => {
+  const [members, setMembers] = useState(MOCK_MEMBERS);
   return (
     <LayoutWithSidebar>
       <div>
         <div className="mb-6 flex items-center justify-between">
           <div className="flex flex-col">
-            <Heading>Produtos</Heading>
-            <Paragraph>Gerencie seus produtos</Paragraph>
+            <Heading>Membros</Heading>
+            <Paragraph>Gerencie seus membros</Paragraph>
           </div>
           <Button
             className="!w-[250px]"
             leftIcon={<PlusCircle color="#FFF" size={16} />}
           >
-            Adicionar produto
+            Adicionar membro
           </Button>
         </div>
-        <Table content={products} />
+        <Table content={members} />
       </div>
     </LayoutWithSidebar>
   );

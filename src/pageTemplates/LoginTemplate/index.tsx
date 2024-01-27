@@ -1,11 +1,11 @@
-import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Envelope, EyeClosed, Eye } from 'phosphor-react';
-import { useState } from 'react';
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Envelope, EyeClosed, Eye } from "phosphor-react";
+import { useState } from "react";
 
 export const LoginTemplate = () => {
-  const [inputEmail, setInputEmail] = useState('');
-  const [inputPassword, setInputPassword] = useState('');
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ export const LoginTemplate = () => {
       <Input
         label="Senha"
         onChange={(e) => setInputPassword(e.target.value)}
-        type={showPassword ? 'text' : 'password'}
+        type={showPassword ? "text" : "password"}
         iconRight={showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
         onClickIconRight={() => setShowPassword(!showPassword)}
       />

@@ -1,4 +1,4 @@
-import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
+import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
 import {
   CaretRight,
   FilePdf,
@@ -6,13 +6,13 @@ import {
   PencilLine,
   Printer,
   Trash,
-} from 'phosphor-react';
-import { Line } from './Line';
-import { Paragraph, ParagraphSizeVariant } from './Paragraph';
-import Image from 'next/image';
-import { Heading } from './Heading';
-import { ReactNode } from 'react';
-import { Input } from './Input';
+} from "phosphor-react";
+import { Line } from "./Line";
+import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
+import Image from "next/image";
+import { Heading } from "./Heading";
+import { ReactNode } from "react";
+import { Input } from "./Input";
 
 interface ITableProps {
   content: any[];
@@ -41,7 +41,7 @@ export const Table = ({
   headerComponent,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != 'id')
+    ? Object.keys(content[0]).filter((item) => item != "id")
     : [];
 
   const calculateWidthSize = () => {
