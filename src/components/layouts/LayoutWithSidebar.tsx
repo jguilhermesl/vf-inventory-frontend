@@ -43,13 +43,13 @@ export const LayoutWithSidebar = ({
               <Paragraph>João Guilherme</Paragraph>
             </div>
           </header>
-          <div className="mt-6 lg:mt-24 px-4 lg:px-8">{children}</div>
+          <div className="mt-6 px-4 lg:px-8">{children}</div>
         </div>
       </div>
       {sidebarIsOpen && (
         <div
           className={clsx(
-            'bg-[#00000030] h-[100vh] w-full flex fixed top-0 right-0 left-0 transition-all duration-1000 ease-in-out'
+            'bg-[#00000030] h-[100vh] w-full fixed top-0 right-0 left-0 transition-all duration-1000 ease-in-out flex lg:hidden'
           )}
         >
           <div
