@@ -4,13 +4,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretLeft } from 'phosphor-react';
 import { Line } from '../Line';
+import { Logo } from '../Logo';
 
 export const Sidebar = () => {
   const { pathname } = useRouter();
 
   return (
-    <aside className="w-full h-full flex flex-col gap-4 items-center bg-white px-6 py-8 relative">
-      <div>LOGO</div>
+    <aside className="h-full w-full flex-col gap-4 items-center bg-white px-6 py-8 relative hidden lg:flex border-r border-r-[#00000010]">
+      <Logo className="hidden lg:flex" />
       <Line />
       <div className="w-full flex flex-col items-center">
         <ul className="flex flex-col gap-4 mt-8">
@@ -36,9 +37,9 @@ export const Sidebar = () => {
           })}
         </ul>
       </div>
-      <button className="rounded-full bg-primary flex items-center justify-center w-8 h-8 absolute top-8 right-[-10px] hover:bg-opacity-80 active:bg-opacity-60">
+      {/* <button className="rounded-full bg-primary flex items-center justify-center w-8 h-8 absolute top-8 right-[-10px] hover:bg-opacity-80 active:bg-opacity-60">
         <CaretLeft color="#FFF" size={20} />
-      </button>
+      </button> */}
     </aside>
   );
 };

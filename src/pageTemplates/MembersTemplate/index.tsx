@@ -12,8 +12,8 @@ export const MembersTemplate = () => {
   return (
     <LayoutWithSidebar>
       <div>
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="mb-6 flex items-center justify-center text-center lg:text-start lg:justify-between flex-col lg:flex-row">
+          <div className="flex flex-col mb-4 lg:mb-0">
             <Heading>Membros</Heading>
             <Paragraph>Gerencie seus membros</Paragraph>
           </div>

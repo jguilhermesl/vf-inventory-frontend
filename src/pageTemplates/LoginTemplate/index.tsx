@@ -4,13 +4,11 @@ import { Envelope, EyeClosed, Eye } from 'phosphor-react';
 import { useFormik } from 'formik';
 import { validationSchema } from '@/validation/login';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 export const LoginTemplate = () => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleLogin = (values) => {
-    console.log(values);
-  };
+  const { handleLogin } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -18,7 +16,7 @@ export const LoginTemplate = () => {
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: handleLogin,
+    onSubmit: (values) => handleLogin(values.email, values.password),
   });
 
   return (
