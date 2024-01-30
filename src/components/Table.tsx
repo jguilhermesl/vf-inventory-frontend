@@ -1,4 +1,4 @@
-import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
+import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
 import {
   CaretRight,
   FilePdf,
@@ -6,13 +6,11 @@ import {
   PencilLine,
   Printer,
   Trash,
-} from "phosphor-react";
-import { Line } from "./Line";
-import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
-import Image from "next/image";
-import { Heading } from "./Heading";
-import { ReactNode } from "react";
-import { Input } from "./Input";
+} from 'phosphor-react';
+import { Line } from './Line';
+import { Paragraph, ParagraphSizeVariant } from './Paragraph';
+import { ReactNode } from 'react';
+import { Input } from './Input';
 
 interface ITableProps {
   content: any[];
@@ -41,7 +39,7 @@ export const Table = ({
   headerComponent,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != "id")
+    ? Object.keys(content[0]).filter((item) => item != 'id')
     : [];
 
   const calculateWidthSize = () => {
@@ -53,7 +51,7 @@ export const Table = ({
     <div className="flex flex-col bg-white w-full px-8 py-6 rounded-2xl shadow-md border border-[#00000030]">
       <header className="flex items-center justify-between mb-4">
         <Input
-          placeholder="Procure por algum produto"
+          placeholder="Procure por algum item"
           iconLeft={<MagnifyingGlass size={16} />}
           className="!w-[250px]"
         />
@@ -88,7 +86,7 @@ export const Table = ({
                   className={`flex justify-start`}
                   style={{ width: calculateWidthSize() }}
                 >
-                  {/* <Paragraph className="font-medium">Actions</Paragraph> */}
+                  {/* <Paragraph className="!font-bold">Ações</Paragraph> */}
                 </th>
               </tr>
             </thead>

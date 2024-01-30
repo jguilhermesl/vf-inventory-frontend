@@ -75,7 +75,7 @@ export const Input = ({
           inputClassesVariant[variant],
           {
             '!bg-neutral-light-grey': disabled,
-            'border-negative-dark border-opacity-100': error,
+            'border-red-800 border-opacity-100': error,
             'border-neutral-grey': !error,
           },
           className
@@ -86,7 +86,7 @@ export const Input = ({
           id={name}
           disabled={disabled}
           className={clsx(
-            'w-full outline-none text-sm disabled:text-dark-grey rounded bg-transparent',
+            'w-full outline-none text-sm disabled:text-dark-grey rounded bg-transparent ',
             inputPlaceholderClassesVariant[variantPlaceholder]
           )}
           autoComplete="off"

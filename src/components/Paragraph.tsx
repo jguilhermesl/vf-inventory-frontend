@@ -38,7 +38,7 @@ export const Paragraph = ({
         {
           'text-dark-primary': !disabled && !hasError,
           'text-dark-grey': disabled,
-          'text-negative-dark': hasError,
+          'text-red-800': hasError,
         },
         className
       )}
