@@ -1,11 +1,11 @@
-import { Button } from '@/components/Button';
-import { Heading } from '@/components/Heading';
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { Paragraph } from '@/components/Paragraph';
-import { Table } from '@/components/Table';
-import { MOCK_PRODUCTS } from '@/constants/products';
-import { PlusCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { Button } from "@/components/Button";
+import { Heading } from "@/components/Heading";
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Paragraph } from "@/components/Paragraph";
+import { Table } from "@/components/Table";
+import { MOCK_PRODUCTS } from "@/constants/products";
+import { PlusCircle } from "phosphor-react";
+import { useState } from "react";
 
 export const ProductsTemplate = () => {
   const [products, setProducts] = useState(MOCK_PRODUCTS);

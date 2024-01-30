@@ -1,11 +1,11 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "../../components/Heading";
-import { Table } from "../../components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useState } from "react";
-import { MOCK_MEMBERS } from "@/constants/members";
-import { PlusCircle } from "phosphor-react";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useState } from 'react';
+import { MOCK_MEMBERS } from '@/constants/members';
+import { PlusCircle } from 'phosphor-react';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState(MOCK_MEMBERS);
