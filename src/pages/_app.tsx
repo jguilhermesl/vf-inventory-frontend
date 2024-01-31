@@ -1,4 +1,5 @@
 // pages/_app.tsx
+import AuthContextProvider from '@/hooks/useAuth';
 import '@/styles/global.css';
 import Head from 'next/head';
 
@@ -13,7 +14,9 @@ function MyApp({ Component, pageProps }) {
           rel="stylesheet"
         />
       </Head>
-      <Component {...pageProps} />
+      <AuthContextProvider>
+        <Component {...pageProps} />
+      </AuthContextProvider>
     </>
   );
 }

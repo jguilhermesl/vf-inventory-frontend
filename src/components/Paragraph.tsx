@@ -34,12 +34,11 @@ export const Paragraph = ({
   return (
     <p
       className={clsx(
-        'font-poppins',
         ParagraphClassesSize[size],
         {
           'text-dark-primary': !disabled && !hasError,
           'text-dark-grey': disabled,
-          'text-negative-dark': hasError,
+          'text-red-800': hasError,
         },
         className
       )}

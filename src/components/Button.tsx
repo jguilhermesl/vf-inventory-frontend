@@ -50,7 +50,7 @@ export const Button = ({
   return (
     <button
       className={clsx(
-        'flex items-center justify-center rounded-full font-bold text-sm font-poppins gap-4 hover:opacity-90 active:opacity-80',
+        'flex items-center justify-center rounded-full font-bold text-sm gap-4 hover:opacity-90 active:opacity-80',
         buttonClassesSizes[size],
         buttonClassesVariant[variant],
         className
