@@ -6,6 +6,7 @@ import { Input } from '@/components/Input';
 import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
 import { Paragraph } from '@/components/Paragraph';
 import { CheckCircle } from 'phosphor-react';
+import { useState } from 'react';
 
 const MOCK_OPTIONS = [
   {
@@ -23,6 +24,8 @@ const MOCK_OPTIONS = [
 ];
 
 export const ActionInventoryTemplate = () => {
+  const [product, setProduct] = useState('');
+
   return (
     <LayoutWithSidebar>
       <div>
@@ -34,7 +37,7 @@ export const ActionInventoryTemplate = () => {
         </div>
         <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
           <form className="flex flex-col gap-4">
-            <AutoCompleteInput />
+            <AutoCompleteInput product={product} setProduct={setProduct} />
             <Dropdown options={MOCK_OPTIONS} />
             <Input placeholder="Escolha a quantidade" type={'number'} />
             <Button
