@@ -1,13 +1,13 @@
-import { Button } from '@/components/Button';
-import { Heading } from '@/components/Heading';
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { ModalAddProduct } from '@/components/layouts/modals/ModalAddProduct';
-import { ModalEditProduct } from '@/components/layouts/modals/ModalEditProduct';
-import { Paragraph } from '@/components/Paragraph';
-import { Table } from '@/components/Table';
-import { MOCK_PRODUCTS } from '@/constants/products';
-import { PlusCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { Button } from "@/components/Button";
+import { Heading } from "@/components/Heading";
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { ModalAddProduct } from "@/components/layouts/modals/ModalAddProduct";
+import { ModalEditProduct } from "@/components/layouts/modals/ModalEditProduct";
+import { Paragraph } from "@/components/Paragraph";
+import { Table } from "@/components/Table";
+import { MOCK_PRODUCTS } from "@/constants/products";
+import { PlusCircle } from "phosphor-react";
+import { useState } from "react";
 
 export const ProductsTemplate = () => {
   const [modalAddProductIsOpen, setModalAddProductIsOpen] = useState(false);

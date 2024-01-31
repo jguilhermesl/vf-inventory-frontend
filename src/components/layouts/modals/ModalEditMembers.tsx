@@ -2,38 +2,27 @@ import { Button, ButtonVariant } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Modal } from "@/components/Modal";
 import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
-import { addProductSchema } from "@/validation/products";
-import { useFormik } from "formik";
 import { CheckCircle, XCircle } from "phosphor-react";
 import { Dispatch, SetStateAction } from "react";
 
-interface IModalAddProductProps {
+interface IModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
+  currentMember: any;
 }
 
-export const ModalAddProduct = ({
+export const ModalEditMembers = ({
   setModalIsOpen,
   modalIsOpen,
-}: IModalAddProductProps) => {
-  const handleAddProduct = () => {};
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      sigla: "",
-    },
-    validationSchema: addProductSchema,
-    onSubmit: handleAddProduct,
-  });
-
+  currentMember,
+}: IModalEditProductProps) => {
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
       <Modal.Content>
         <div className="bg-white px-6 py-4 min-w-[400px]">
           <header className="flex justify-between items-center w-full flex-1">
             <Paragraph size={ParagraphSizeVariant.ExtraLarge}>
-              Adicionar produto
+              Editar Membro
             </Paragraph>
             <Modal.Close>
               <Button variant={ButtonVariant.iconOnly} className="!w-6">
@@ -44,19 +33,17 @@ export const ModalAddProduct = ({
           <form className="mt-6" onSubmit={() => {}}>
             <Input
               label="Nome"
-              error={formik.errors?.name as string}
-              {...formik.getFieldProps("name")}
+              value={currentMember && currentMember.name}
+              disabled={true}
             />
-            <Input
-              label="Sigla"
-              error={formik.errors?.sigla as string}
-              {...formik.getFieldProps("sigla")}
-            />
+            <Input label="Email" value={currentMember && currentMember.email} />
+            <Input label="Cargo" value={currentMember && currentMember.cargo} />
+            <Input label="Senha" value={currentMember && currentMember.senha} />
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
             >
-              Adicionar produto
+              Salvar Membro
             </Button>
           </form>
         </div>
