@@ -1,9 +1,9 @@
-import { Heading } from "@/components/Heading";
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Paragraph } from "@/components/Paragraph";
-import { Table } from "@/components/Table";
-import { MOCK_HISTORY } from "@/constants/history";
-import { useState } from "react";
+import { Heading } from '@/components/Heading';
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Paragraph } from '@/components/Paragraph';
+import { Table } from '@/components/Table';
+import { MOCK_HISTORY } from '@/constants/history';
+import { useState } from 'react';
 
 export const HistoryTemplate = () => {
   const [history, setHistory] = useState(MOCK_HISTORY);
@@ -22,7 +22,11 @@ export const HistoryTemplate = () => {
               <Paragraph>Gerencie seu Histórico</Paragraph>
             </div>
           </div>
-          <Table content={history} handleEditItem={handleEditItem} />
+          <Table
+            content={history}
+            handleEditItem={handleEditItem}
+            disableActions
+          />
         </div>
       </LayoutWithSidebar>
     </>

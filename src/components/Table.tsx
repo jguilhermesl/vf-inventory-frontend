@@ -25,6 +25,7 @@ interface ITableProps {
   emptyMessage?: string;
   tableTitle?: string;
   headerComponent?: ReactNode;
+  disableActions?: boolean;
 }
 
 export const Table = ({
@@ -36,6 +37,7 @@ export const Table = ({
   disableDeleteItem,
   disableEditItem,
   emptyMessage,
+  disableActions,
 }: ITableProps) => {
   const titles = content[0]
     ? Object.keys(content[0]).filter((item) => item != 'id')
@@ -82,12 +84,14 @@ export const Table = ({
                       </th>
                     );
                   })}
-                  <th
-                    className={`flex justify-start`}
-                    style={{ width: calculateWidthSize() }}
-                  >
-                    {/* <Paragraph className="!font-bold">Ações</Paragraph> */}
-                  </th>
+                  {!disableActions && (
+                    <th
+                      className={`flex justify-start`}
+                      style={{ width: calculateWidthSize() }}
+                    >
+                      {/* <Paragraph className="!font-bold">Ações</Paragraph> */}
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className={`flex flex-col gap-4 mt-4 w-full ml-4`}>
@@ -122,33 +126,35 @@ export const Table = ({
                         )}
                       </td>
                     ))}
-                    <td
-                      className={`flex gap-2`}
-                      style={{ width: calculateWidthSize() }}
-                    >
-                      {!disableDeleteItem && (
-                        <button
-                          onClick={() => handleDeleteItem(item.id)}
-                          className="bg-none border-none rounded-full hover:bg-primary hover:text-white p-1"
-                        >
-                          <Trash
-                            size={20}
-                            className="text-primary hover:text-white"
-                          />
-                        </button>
-                      )}
-                      {!disableEditItem && (
-                        <button
-                          onClick={() => handleEditItem(item.id)}
-                          className="bg-none border-none rounded-full hover:bg-primary hover:text-white p-1"
-                        >
-                          <PencilLine
-                            size={20}
-                            className="text-primary hover:text-white"
-                          />
-                        </button>
-                      )}
-                    </td>
+                    {!disableActions && (
+                      <td
+                        className={`flex gap-2 `}
+                        style={{ width: calculateWidthSize() }}
+                      >
+                        {!disableDeleteItem && (
+                          <button
+                            onClick={() => handleDeleteItem(item.id)}
+                            className="bg-none border-none rounded-full hover:bg-primary hover:text-white p-1"
+                          >
+                            <Trash
+                              size={20}
+                              className="text-primary hover:text-white"
+                            />
+                          </button>
+                        )}
+                        {!disableEditItem && (
+                          <button
+                            onClick={() => handleEditItem(item.id)}
+                            className="bg-none border-none rounded-full hover:bg-primary hover:text-white p-1"
+                          >
+                            <PencilLine
+                              size={20}
+                              className="text-primary hover:text-white"
+                            />
+                          </button>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
