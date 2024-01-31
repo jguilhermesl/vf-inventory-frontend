@@ -52,8 +52,7 @@ const AutoCompleteItem = memo(
   }
 );
 
-export const AutoCompleteInput = () => {
-  const [product, setProduct] = useState('');
+export const AutoCompleteInput = ({ product, setProduct }) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
   const [productsSuggestions, setProductsSuggestions] = useState(MOCK_PRODUCTS);
 
