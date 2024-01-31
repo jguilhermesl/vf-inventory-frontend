@@ -1,4 +1,4 @@
-import { ActionInventoryTemplate } from "@/pageTemplates/Action-inventoryTemplate/index";
+import { ActionInventoryTemplate } from '@/pageTemplates/ActionInventoryTemplate/index';
 
 const ActionInventory = () => <ActionInventoryTemplate />;
 

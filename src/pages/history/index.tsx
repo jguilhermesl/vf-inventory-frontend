@@ -1,4 +1,4 @@
-import { HistoryTemplate } from "@/pageTemplates/historyTemplates/index";
+import { HistoryTemplate } from '@/pageTemplates/HistoryTemplate/index';
 
 const History = () => <HistoryTemplate />;
 
