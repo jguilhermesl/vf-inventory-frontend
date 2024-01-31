@@ -11,6 +11,7 @@ import { Line } from './Line';
 import { Paragraph, ParagraphSizeVariant } from './Paragraph';
 import { ReactNode } from 'react';
 import { Input } from './Input';
+import clsx from 'clsx';
 
 interface ITableProps {
   content: any[];
@@ -35,8 +36,6 @@ export const Table = ({
   disableDeleteItem,
   disableEditItem,
   emptyMessage,
-  tableTitle,
-  headerComponent,
 }: ITableProps) => {
   const titles = content[0]
     ? Object.keys(content[0]).filter((item) => item != 'id')
@@ -84,31 +83,47 @@ export const Table = ({
                     );
                   })}
                   <th
-                    className={`flex justify-start min-w-[180px]`}
+                    className={`flex justify-start`}
                     style={{ width: calculateWidthSize() }}
                   >
                     {/* <Paragraph className="!font-bold">Ações</Paragraph> */}
                   </th>
                 </tr>
               </thead>
-              <tbody className={`flex flex-col gap-4 mt-4 w-full `}>
+              <tbody className={`flex flex-col gap-4 mt-4 w-full ml-4`}>
                 {content.map((item) => (
                   <tr
                     key={item.name}
-                    className="w-full flex hover:bg-background px-8 py-4 border-b border-b-[#00000010]"
+                    className="w-full flex hover:bg-background  py-4 border-b border-b-[#00000010]"
                   >
                     {titles.map((title) => (
                       <td
                         className={`flex min-w-[180px]`}
                         style={{ width: calculateWidthSize() }}
                       >
-                        <Paragraph className="!text-base">
-                          {item[title]}
-                        </Paragraph>
+                        {title == 'Modalidade' ? (
+                          <div
+                            className={clsx(
+                              'flex items-center rounded text-center w-[80px] py-2',
+                              {
+                                'bg-red-400': item[title] === 'Saida',
+                                'bg-green-400': item[title] === 'Entrada',
+                              }
+                            )}
+                          >
+                            <Paragraph className="text-white font-bold flex mx-auto">
+                              {item[title]}
+                            </Paragraph>
+                          </div>
+                        ) : (
+                          <Paragraph className="!text-base">
+                            {item[title]}
+                          </Paragraph>
+                        )}
                       </td>
                     ))}
                     <td
-                      className={`flex gap-2 min-w-[180px]`}
+                      className={`flex gap-2`}
                       style={{ width: calculateWidthSize() }}
                     >
                       {!disableDeleteItem && (

@@ -1,4 +1,4 @@
-import { InventoryTemplate } from "@/pageTemplates/inventoryTemplate/index";
+import { InventoryTemplate } from '@/pageTemplates/InventoryTemplate/index';
 
 const Inventory = () => <InventoryTemplate />;
 
