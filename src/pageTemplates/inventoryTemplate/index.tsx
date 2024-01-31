@@ -3,7 +3,7 @@ import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
 export const InventoryTemplate = () => {
   return (
     <LayoutWithSidebar>
-      <h1>Layout</h1>
+      <h1>Layoutttt</h1>
     </LayoutWithSidebar>
   );
 };
