@@ -1,24 +1,24 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useState } from "react";
-import { MOCK_MEMBERS } from "@/constants/members";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddMember } from "../../components/layouts/modals/ModalAddMembers";
-import { ModalEditMembers } from "@/components/layouts/modals/ModalEditMembers";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useState } from 'react';
+import { MOCK_MEMBERS } from '@/constants/members';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddMember } from '../../components/layouts/modals/ModalAddMembers';
+import { ModalEditMembers } from '@/components/layouts/modals/ModalEditMembers';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState(MOCK_MEMBERS);
-  const [modalAddProductIsOpen, setModalAddProductIsOpen] = useState(false);
-  const [modalEditProductIsOpen, setModalEditProductIsOpen] = useState(false);
+  const [modalAddMemberIsOpen, setModalAddMemberIsOpen] = useState(false);
+  const [modalEditMemberIsOpen, setModalEditMemberIsOpen] = useState(false);
   const [currentMember, setCurrentMember] = useState({});
 
-  const handleEditMember = (productid: string) => {
-    const item = members.find((product) => product.id == productid);
+  const handleEditMember = (memberId: string) => {
+    const item = members.find((member) => member.id == memberId);
     setCurrentMember(item);
-    setModalEditProductIsOpen(true);
+    setModalEditMemberIsOpen(true);
   };
   return (
     <>
@@ -32,7 +32,7 @@ export const MembersTemplate = () => {
             <Button
               className="!w-[250px]"
               leftIcon={<PlusCircle color="#FFF" size={16} />}
-              onClick={() => setModalAddProductIsOpen(true)}
+              onClick={() => setModalAddMemberIsOpen(true)}
             >
               Adicionar membro
             </Button>
@@ -41,12 +41,12 @@ export const MembersTemplate = () => {
         </div>
       </LayoutWithSidebar>
       <ModalAddMember
-        modalIsOpen={modalAddProductIsOpen}
-        setModalIsOpen={setModalAddProductIsOpen}
+        modalIsOpen={modalAddMemberIsOpen}
+        setModalIsOpen={setModalAddMemberIsOpen}
       />
       <ModalEditMembers
-        modalIsOpen={modalEditProductIsOpen}
-        setModalIsOpen={setModalEditProductIsOpen}
+        modalIsOpen={modalEditMemberIsOpen}
+        setModalIsOpen={setModalEditMemberIsOpen}
         currentMember={currentMember}
       />
     </>
