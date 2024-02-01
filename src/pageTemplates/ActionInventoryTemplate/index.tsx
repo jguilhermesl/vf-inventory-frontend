@@ -1,30 +1,30 @@
-import { AutoCompleteInput } from '@/components/AutoCompleteInput';
-import { Button } from '@/components/Button';
-import { Dropdown } from '@/components/Dropdown';
-import { Heading } from '@/components/Heading';
-import { Input } from '@/components/Input';
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { Paragraph } from '@/components/Paragraph';
-import { CheckCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { AutoCompleteInput } from "@/components/AutoCompleteInput";
+import { Button } from "@/components/Button";
+import { Dropdown } from "@/components/Dropdown";
+import { Heading } from "@/components/Heading";
+import { Input } from "@/components/Input";
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Paragraph } from "@/components/Paragraph";
+import { CheckCircle } from "phosphor-react";
+import { useState } from "react";
 
 const MOCK_OPTIONS = [
   {
-    label: 'ICA133',
-    value: 'ica133',
+    label: "ICA133",
+    value: "ica133",
   },
   {
-    label: 'ICA134',
-    value: 'ica134',
+    label: "ICA134",
+    value: "ica134",
   },
   {
-    label: 'ICA135',
-    value: 'ica135',
+    label: "ICA135",
+    value: "ica135",
   },
 ];
 
 export const ActionInventoryTemplate = () => {
-  const [product, setProduct] = useState('');
+  const [product, setProduct] = useState("");
 
   return (
     <LayoutWithSidebar>
@@ -39,7 +39,7 @@ export const ActionInventoryTemplate = () => {
           <form className="flex flex-col gap-4">
             <AutoCompleteInput product={product} setProduct={setProduct} />
             <Dropdown options={MOCK_OPTIONS} />
-            <Input placeholder="Escolha a quantidade" type={'number'} />
+            <Input placeholder="Escolha a quantidade" type={"number"} />
             <Button
               className="!w-[250px] mx-auto flex"
               leftIcon={<CheckCircle size={16} color="#FFF" />}

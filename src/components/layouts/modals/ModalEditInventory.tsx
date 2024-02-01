@@ -3,26 +3,39 @@ import { Input } from "@/components/Input";
 import { Modal } from "@/components/Modal";
 import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
 import { CheckCircle, XCircle } from "phosphor-react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { AutoCompleteInput } from "@/components/AutoCompleteInput";
+import { Dropdown } from "@/components/Dropdown";
 
 interface IModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
-  currentMember: any;
+  currentInventory: any;
 }
 
-export const ModalEditMembers = ({
+export const ModalEditInventory = ({
   setModalIsOpen,
   modalIsOpen,
-  currentMember,
+  currentInventory,
 }: IModalEditProductProps) => {
+  const MOCK_OPTIONS = [
+    {
+      label: "Lote Novo",
+      value: "novo",
+    },
+    {
+      label: "Lote Existente",
+      value: "existente",
+    },
+  ];
+  const [inventory, setInventory] = useState("");
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
       <Modal.Content>
         <div className="bg-white px-6 py-4 min-w-[400px]">
           <header className="flex justify-between items-center w-full flex-1">
             <Paragraph size={ParagraphSizeVariant.ExtraLarge}>
-              Editar Membro
+              Editar Estoque
             </Paragraph>
             <Modal.Close>
               <Button variant={ButtonVariant.iconOnly} className="!w-6">
@@ -30,16 +43,27 @@ export const ModalEditMembers = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="mt-6" onSubmit={() => {}}>
-            <Input label="Nome" value={currentMember && currentMember.name} />
-            <Input label="Email" value={currentMember && currentMember.email} />
-            <Input label="Cargo" value={currentMember && currentMember.cargo} />
-            <Input label="Senha" value={currentMember && currentMember.senha} />
+          <form className="flex flex-col gap-4" onSubmit={() => {}}>
+            <AutoCompleteInput product={inventory} setProduct={setInventory} />
+            <Dropdown options={MOCK_OPTIONS} />
+            <Input
+              label="Validade"
+              value={currentInventory && currentInventory.Validade}
+            />
+            <Input
+              label="Quantidade"
+              value={currentInventory && currentInventory.Quantidade}
+            />
+            <Input
+              label="Preço"
+              value={currentInventory && currentInventory.Preço}
+            />
+
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
             >
-              Salvar Membro
+              Salvar Estoque
             </Button>
           </form>
         </div>
