@@ -8,6 +8,8 @@ import { CheckCircle, XCircle } from "phosphor-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AutoCompleteInput } from "../../../components/AutoCompleteInput";
 import { Dropdown } from "@/components/Dropdown";
+import { convertRealToQuantidade } from "@/utils/convertRealToQuantidade";
+import { convertFormatValidade } from "@/utils/convertFormatValidade";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -64,17 +66,27 @@ export const ModalAddInventory = ({
               label="Quantidade"
               error={formik.errors?.quantidade as string}
               {...formik.getFieldProps("name")}
+              placeholder="0"
             />
             <Input
               label="Preço"
               error={formik.errors?.preco as string}
               {...formik.getFieldProps("preco")}
+              placeholder="R$"
+              onChange={(e) => {
+                const formattedValue = convertRealToQuantidade(e.target.value);
+                formik.setFieldValue("preco", formattedValue);
+              }}
             />
-
             <Input
               label="Validade"
               error={formik.errors?.validade as string}
-              {...formik.getFieldProps("senha")}
+              {...formik.getFieldProps("validade")}
+              placeholder="DD.MM.AAAA"
+              onChange={(e) => {
+                const formattedValue = convertFormatValidade(e.target.value);
+                formik.setFieldValue("validade", formattedValue);
+              }}
             />
             <Button
               className="w-[220px] mx-auto !text-sm"
