@@ -1,5 +1,5 @@
 // Função para formatar a data
-export const convertFormatValidade = (value) => {
+export const convertFormatValidity = (value) => {
   if (!value) {
     return "";
   }

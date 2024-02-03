@@ -2,14 +2,14 @@ import { Button, ButtonVariant } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Modal } from "@/components/Modal";
 import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
-import { addInventoryrSchema } from "@/validation/inventory";
+import { addInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
 import { CheckCircle, XCircle } from "phosphor-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AutoCompleteInput } from "../../../components/AutoCompleteInput";
 import { Dropdown } from "@/components/Dropdown";
-import { convertRealToQuantidade } from "@/utils/convertRealToQuantidade";
-import { convertFormatValidade } from "@/utils/convertFormatValidade";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantidade";
+import { convertFormatValidity } from "@/utils/convertFormatValidade";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -24,22 +24,22 @@ export const ModalAddInventory = ({
 
   const formik = useFormik({
     initialValues: {
-      quantidade: "",
-      preco: "",
-      validade: "",
+      quantity: "",
+      price: "",
+      validity: "",
     },
-    validationSchema: addInventoryrSchema,
+    validationSchema: addInventorySchema,
     onSubmit: handleAddMember,
   });
 
   const MOCK_OPTIONS = [
     {
       label: "Lote Novo",
-      value: "novo",
+      value: "new",
     },
     {
       label: "Lote Existente",
-      value: "existente",
+      value: "existing",
     },
   ];
   const [inventory, setInventory] = useState("");
@@ -59,40 +59,41 @@ export const ModalAddInventory = ({
             </Modal.Close>
           </header>
           <form className="flex flex-col gap-4" onSubmit={() => {}}>
+            <label> Produto</label>
             <AutoCompleteInput product={inventory} setProduct={setInventory} />
-            <Dropdown options={MOCK_OPTIONS} />
+            <Dropdown options={MOCK_OPTIONS} label="Lote" />
             <Input
               type="number"
               label="Quantidade"
-              error={formik.errors?.quantidade as string}
-              {...formik.getFieldProps("name")}
+              error={formik.errors?.quantity as string}
+              {...formik.getFieldProps("quantity")}
               placeholder="0"
             />
             <Input
               label="Preço"
-              error={formik.errors?.preco as string}
-              {...formik.getFieldProps("preco")}
+              error={formik.errors?.price as string}
+              {...formik.getFieldProps("price")}
               placeholder="R$"
               onChange={(e) => {
-                const formattedValue = convertRealToQuantidade(e.target.value);
-                formik.setFieldValue("preco", formattedValue);
+                const formattedValue = convertRealToQuantity(e.target.value);
+                formik.setFieldValue("price", formattedValue);
               }}
             />
             <Input
               label="Validade"
-              error={formik.errors?.validade as string}
-              {...formik.getFieldProps("validade")}
+              error={formik.errors?.validity as string}
+              {...formik.getFieldProps("validity")}
               placeholder="DD.MM.AAAA"
               onChange={(e) => {
-                const formattedValue = convertFormatValidade(e.target.value);
-                formik.setFieldValue("validade", formattedValue);
+                const formattedValue = convertFormatValidity(e.target.value);
+                formik.setFieldValue("validity", formattedValue);
               }}
             />
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
             >
-              Adicionar Membro
+              Adicionar Estoque
             </Button>
           </form>
         </div>

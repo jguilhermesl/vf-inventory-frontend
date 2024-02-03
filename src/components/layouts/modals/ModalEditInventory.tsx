@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AutoCompleteInput } from "@/components/AutoCompleteInput";
 import { Dropdown } from "@/components/Dropdown";
 
-interface IModalEditProductProps {
+interface ModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
   currentInventory: any;
@@ -17,15 +17,15 @@ export const ModalEditInventory = ({
   setModalIsOpen,
   modalIsOpen,
   currentInventory,
-}: IModalEditProductProps) => {
+}: ModalEditProductProps) => {
   const MOCK_OPTIONS = [
     {
       label: "Lote Novo",
-      value: "novo",
+      value: "new",
     },
     {
       label: "Lote Existente",
-      value: "existente",
+      value: "existing",
     },
   ];
   const [inventory, setInventory] = useState("");
@@ -44,8 +44,9 @@ export const ModalEditInventory = ({
             </Modal.Close>
           </header>
           <form className="flex flex-col gap-4" onSubmit={() => {}}>
+            <label> Produto</label>
             <AutoCompleteInput product={inventory} setProduct={setInventory} />
-            <Dropdown options={MOCK_OPTIONS} />
+            <Dropdown options={MOCK_OPTIONS} label="Lote" />
             <Input
               label="Validade"
               value={currentInventory && currentInventory.Validade}

@@ -1,4 +1,4 @@
-export const convertRealToQuantidade = (value) => {
+export const convertRealToQuantity = (value) => {
   if (!value) {
     return "";
   }

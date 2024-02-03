@@ -5,7 +5,7 @@ import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
 import { CheckCircle, XCircle } from "phosphor-react";
 import { Dispatch, SetStateAction } from "react";
 
-interface IModalEditProductProps {
+interface ModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
   currentProduct: any;
@@ -15,7 +15,7 @@ export const ModalEditProduct = ({
   setModalIsOpen,
   modalIsOpen,
   currentProduct,
-}: IModalEditProductProps) => {
+}: ModalEditProductProps) => {
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
       <Modal.Content>
