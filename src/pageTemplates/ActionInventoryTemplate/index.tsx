@@ -37,9 +37,14 @@ export const ActionInventoryTemplate = () => {
         </div>
         <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
           <form className="flex flex-col gap-4">
+            <label> Produto</label>
             <AutoCompleteInput product={product} setProduct={setProduct} />
-            <Dropdown options={MOCK_OPTIONS} />
-            <Input placeholder="Escolha a quantidade" type={"number"} />
+            <Dropdown label="Lote" options={MOCK_OPTIONS} />
+            <Input
+              placeholder="Escolha a quantidade"
+              label="Quantidade"
+              type={"number"}
+            />
             <Button
               className="!w-[250px] mx-auto flex"
               leftIcon={<CheckCircle size={16} color="#FFF" />}
