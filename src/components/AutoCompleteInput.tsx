@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '@/components/Input';
 import { MagnifyingGlass } from 'phosphor-react';
 import { memo } from 'react';
@@ -7,7 +7,7 @@ import { Spinner } from './Spinner';
 import { Line } from './Line';
 import { MOCK_PRODUCTS } from '@/constants/products';
 
-interface IAutoCompleteItemProps {
+interface AutoCompleteItemProps {
   suggestions: any[];
   handleClickProduct?: (productId: string) => void;
   isLoading?: boolean;
@@ -20,7 +20,7 @@ const AutoCompleteItem = memo(
     handleClickProduct,
     isLoading,
     isOpenSuggestions,
-  }: IAutoCompleteItemProps) => {
+  }: AutoCompleteItemProps) => {
     return (
       <div
         className={clsx(

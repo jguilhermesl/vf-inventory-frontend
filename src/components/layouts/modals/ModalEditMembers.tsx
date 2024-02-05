@@ -1,9 +1,9 @@
-import { Button, ButtonVariant } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction } from 'react';
+import { Button, ButtonVariant } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { CheckCircle, XCircle } from "phosphor-react";
+import { Dispatch, SetStateAction } from "react";
 
 interface IModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
