@@ -1,6 +1,6 @@
-import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
-import React from "react";
-import "jspdf-autotable";
+import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
+import React from 'react';
+import 'jspdf-autotable';
 import {
   CaretRight,
   FilePdf,
@@ -8,13 +8,13 @@ import {
   PencilLine,
   Printer,
   Trash,
-} from "phosphor-react";
-import { Line } from "./Line";
-import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
-import { ReactNode, useState } from "react";
-import { Input } from "./Input";
-import clsx from "clsx";
-import jsPDF from "jspdf";
+} from 'phosphor-react';
+import { Line } from './Line';
+import { Paragraph, ParagraphSizeVariant } from './Paragraph';
+import { ReactNode, useState } from 'react';
+import { Input } from './Input';
+import clsx from 'clsx';
+import jsPDF from 'jspdf';
 interface ITableProps {
   content: any[];
   showIdColumn?: false;
@@ -45,7 +45,7 @@ export const Table = ({
   disableActions,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != "id")
+    ? Object.keys(content[0]).filter((item) => item != 'id')
     : [];
 
   const calculateWidthSize = () => {
@@ -55,55 +55,55 @@ export const Table = ({
 
   function handleGenerateExcel() {
     if (!Array.isArray(content) || content.length === 0) {
-      console.error("Dados inválidos para gerar o arquivo CSV.");
+      console.error('Dados inválidos para gerar o arquivo CSV.');
       return;
     }
 
-    // Adiciona informações de formatação para o Excel
-    const excelFormattingInfo = "sep=,\n";
+    const excelFormattingInfo = 'sep=,\n';
 
     const csvContent = content
       .map((item) => {
         const rowValues = titles.map((title) => {
-          // Verifique se o valor é uma string ou algo que pode ser convertido para string
-          const value = item[title] != null ? String(item[title]) : "";
-          return value.includes(",") ? `"${value}"` : value;
+          const value = item[title] != null ? String(item[title]) : '';
+          return value.includes(',') ? `"${value}"` : value;
         });
-        return rowValues.join(",");
+        return rowValues.join(',');
       })
-      .join("\n");
+      .join('\n');
 
-    const downloadButton = document.createElement("a");
+    const downloadButton = document.createElement('a');
     downloadButton.href = encodeURI(
       `data:text/csv;charset=utf-8,${excelFormattingInfo}${csvContent}`
     );
-    downloadButton.target = "_blank";
-    downloadButton.download = "arquivo.csv";
+    downloadButton.target = '_blank';
+    downloadButton.download = 'arquivo.csv';
     document.body.appendChild(downloadButton);
     downloadButton.click();
     document.body.removeChild(downloadButton);
   }
+
   function handleGeneratePDF() {
     if (!Array.isArray(content) || content.length === 0) {
-      console.error("Dados inválidos para gerar o arquivo PDF.");
+      console.error('Dados inválidos para gerar o arquivo PDF.');
       return;
     }
     const doc = new jsPDF();
     const header = titles.map((title) => convertCamelCaseToWords(title));
     const data = content.map((item) =>
-      titles.map((title) => (item[title] != null ? String(item[title]) : ""))
+      titles.map((title) => (item[title] != null ? String(item[title]) : ''))
     );
     const tableConfig = {
       head: [header],
       body: data,
       startY: 20,
-      theme: "grid",
-      styles: { overflow: "linebreak" },
-      columnStyles: { 0: { cellWidth: "auto" } },
+      theme: 'grid',
+      styles: { overflow: 'linebreak' },
+      columnStyles: { 0: { cellWidth: 'auto' } },
     };
-    doc.autoTable(tableConfig);
-    doc.save("arquivo.pdf");
+    (doc as any).autoTable(tableConfig);
+    doc.save('arquivo.pdf');
   }
+
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
       <div className="flex flex-col w-full overflow-x-scroll">
@@ -169,13 +169,13 @@ export const Table = ({
                         className={`flex min-w-[180px]`}
                         style={{ width: calculateWidthSize() }}
                       >
-                        {title == "Modalidade" ? (
+                        {title == 'Modalidade' ? (
                           <div
                             className={clsx(
-                              "flex items-center rounded text-center w-[80px] py-2",
+                              'flex items-center rounded text-center w-[80px] py-2',
                               {
-                                "bg-red-400": item[title] === "Saida",
-                                "bg-green-400": item[title] === "Entrada",
+                                'bg-red-400': item[title] === 'Saida',
+                                'bg-green-400': item[title] === 'Entrada',
                               }
                             )}
                           >
