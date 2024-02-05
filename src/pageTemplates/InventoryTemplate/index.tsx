@@ -22,6 +22,8 @@ export const InventoryTemplate = () => {
     setModalEditInventoryIsOpen(true);
   };
 
+  const handleDeleteInventory = () => {};
+
   return (
     <>
       <LayoutWithSidebar>
