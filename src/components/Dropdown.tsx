@@ -111,7 +111,7 @@ export const Dropdown = ({
         </Select.Portal>
       </Select.Root>
 
-      {label && (
+      {label && error && (
         <Paragraph
           className={clsx({
             'before:content-["ok"] opacity-0': !error,
