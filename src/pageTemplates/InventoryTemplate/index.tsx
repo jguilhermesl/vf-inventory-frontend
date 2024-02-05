@@ -6,20 +6,20 @@ import { Button } from '@/components/Button';
 import { useState } from 'react';
 import { MOCK_INVENTORY } from '@/constants/inventory';
 import { PlusCircle } from 'phosphor-react';
-import { ModalAddInventory } from '../../components/layouts/modals/ModalAddInventory';
+import { ModalAddInventory } from '@/components/layouts/modals/ModalAddInventory';
 import { ModalEditInventory } from '@/components/layouts/modals/ModalEditInventory';
 
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState(MOCK_INVENTORY);
-  const [modalAddInventoryIsOpen, setmodalAddInventoryIsOpen] = useState(false);
-  const [modalEditInventoryIsOpen, setmodalEditInventoryIsOpen] =
+  const [modalAddInventoryIsOpen, setModalAddInventoryIsOpen] = useState(false);
+  const [modalEditInventoryIsOpen, setModalEditInventoryIsOpen] =
     useState(false);
   const [currentInventory, setCurrentInventory] = useState({});
 
   const handleEditInventory = (inventoryId: string) => {
     const item = inventory.find((inventory) => inventory.id === inventoryId);
     setCurrentInventory(item);
-    setmodalEditInventoryIsOpen(true);
+    setModalEditInventoryIsOpen(true);
   };
 
   return (
@@ -34,7 +34,7 @@ export const InventoryTemplate = () => {
             <Button
               className="!w-[250px]"
               leftIcon={<PlusCircle color="#FFF" size={16} />}
-              onClick={() => setmodalAddInventoryIsOpen(true)}
+              onClick={() => setModalAddInventoryIsOpen(true)}
             >
               Adicionar Estoque
             </Button>
@@ -44,11 +44,11 @@ export const InventoryTemplate = () => {
       </LayoutWithSidebar>
       <ModalAddInventory
         modalIsOpen={modalAddInventoryIsOpen}
-        setModalIsOpen={setmodalAddInventoryIsOpen}
+        setModalIsOpen={setModalAddInventoryIsOpen}
       />
       <ModalEditInventory
         modalIsOpen={modalEditInventoryIsOpen}
-        setModalIsOpen={setmodalEditInventoryIsOpen}
+        setModalIsOpen={setModalEditInventoryIsOpen}
         currentInventory={currentInventory}
       />
     </>
