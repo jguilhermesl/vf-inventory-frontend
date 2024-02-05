@@ -1,13 +1,13 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useState } from "react";
-import { MOCK_INVENTORY } from "@/constants/inventory";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddInventory } from "../../components/layouts/modals/ModalAddInventory";
-import { ModalEditInventory } from "@/components/layouts/modals/ModalEditInventory";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useState } from 'react';
+import { MOCK_INVENTORY } from '@/constants/inventory';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddInventory } from '../../components/layouts/modals/ModalAddInventory';
+import { ModalEditInventory } from '@/components/layouts/modals/ModalEditInventory';
 
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState(MOCK_INVENTORY);
@@ -21,6 +21,7 @@ export const InventoryTemplate = () => {
     setCurrentInventory(item);
     setmodalEditInventoryIsOpen(true);
   };
+
   return (
     <>
       <LayoutWithSidebar>
