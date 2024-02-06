@@ -1,21 +1,20 @@
-import React from "react";
-import "jspdf-autotable";
+import React from 'react';
+import 'jspdf-autotable';
 import {
-  CaretRight,
+  FileCsv,
   FilePdf,
   MagnifyingGlass,
   PencilLine,
-  Printer,
   Trash,
-} from "phosphor-react";
-import { Line } from "./Line";
-import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
-import { ReactNode, useState } from "react";
-import { Input } from "./Input";
-import clsx from "clsx";
-import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
-import { handleGenerateExcel } from "../utils/convertHandleCSV";
-import { handleGeneratePDF } from "../utils/converteHandlePDF";
+} from 'phosphor-react';
+import { Line } from './Line';
+import { Paragraph, ParagraphSizeVariant } from './Paragraph';
+import { ReactNode } from 'react';
+import { Input } from './Input';
+import clsx from 'clsx';
+import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
+import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
+import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
 interface ITableProps {
   content: any[];
   showIdColumn?: false;
@@ -29,12 +28,7 @@ interface ITableProps {
   tableTitle?: string;
   headerComponent?: ReactNode;
   disableActions?: boolean;
-  handleGenerateExcel?: (content: any) => void;
-  handleGeneratePDF?: (content: any) => void;
 }
-
-type CSVDataRow = string[];
-type CSVData = CSVDataRow[];
 
 export const Table = ({
   content,
@@ -49,8 +43,10 @@ export const Table = ({
   tableTitle,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != "id")
+    ? Object.keys(content[0]).filter((item) => item != 'id')
     : [];
+
+  const columnsQuantity = titles.length;
 
   const calculateWidthSize = () => {
     const widthSize = Number((100 / (titles.length + 1)).toFixed(0));
@@ -59,8 +55,8 @@ export const Table = ({
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
-      <div className="flex flex-col w-full overflow-x-scroll">
-        <header className="flex items-center justify-between mb-4">
+      <div className="flex flex-col w-full overflow-x-auto flex-1">
+        <header className="flex items-center justify-between mb-4 w-full">
           <Input
             placeholder="Procure por algum item"
             iconLeft={<MagnifyingGlass size={16} />}
@@ -68,7 +64,7 @@ export const Table = ({
           />
           <div className="flex items-center gap-4">
             <button className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center">
-              <Printer
+              <FileCsv
                 size={20}
                 color="#FFF"
                 onClick={() => handleGenerateExcel(content, tableTitle)}
@@ -85,8 +81,15 @@ export const Table = ({
         </header>
         {titles.length ? (
           <>
-            <table className="w-full flex flex-col">
-              <thead className="flex py-4 px-4 rounded-lg bg-background">
+            <table
+              className="flex flex-col "
+              style={{
+                minWidth:
+                  (disableActions ? columnsQuantity : columnsQuantity + 0.5) *
+                  180,
+              }}
+            >
+              <thead className="flex py-4 px-4 w-full rounded-lg bg-background ">
                 <tr className="flex justify-between w-full">
                   {titles.map((title) => {
                     return (
@@ -105,9 +108,7 @@ export const Table = ({
                     <th
                       className={`flex justify-start`}
                       style={{ width: calculateWidthSize() }}
-                    >
-                      {/* <Paragraph className="!font-bold">Ações</Paragraph> */}
-                    </th>
+                    ></th>
                   )}
                 </tr>
               </thead>
@@ -122,13 +123,13 @@ export const Table = ({
                         className={`flex min-w-[180px]`}
                         style={{ width: calculateWidthSize() }}
                       >
-                        {title == "Modalidade" ? (
+                        {title == 'Modalidade' ? (
                           <div
                             className={clsx(
-                              "flex items-center rounded text-center w-[80px] py-2",
+                              'flex items-center rounded text-center w-[80px] py-2',
                               {
-                                "bg-red-400": item[title] === "Saida",
-                                "bg-green-400": item[title] === "Entrada",
+                                'bg-red-400': item[title] === 'Saida',
+                                'bg-green-400': item[title] === 'Entrada',
                               }
                             )}
                           >
@@ -177,7 +178,7 @@ export const Table = ({
               </tbody>
             </table>
             <Line className="my-4 " />
-            <div>
+            <div className="mb-4">
               <Paragraph size={ParagraphSizeVariant.Large}>
                 Total de itens: {content.length}
               </Paragraph>

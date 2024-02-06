@@ -12,8 +12,8 @@ export const handleGenerateExcel = (content, tableTitle) => {
     .getDate()
     .toString()
     .padStart(2, "0")}.${(currentDate.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}.${currentDate.getFullYear()}`;
+      .toString()
+      .padStart(2, "0")}.${currentDate.getFullYear()}`;
 
   const formattedTime = `${currentDate
     .getHours()
