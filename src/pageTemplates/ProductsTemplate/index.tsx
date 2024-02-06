@@ -38,7 +38,11 @@ export const ProductsTemplate = () => {
               Adicionar produto
             </Button>
           </div>
-          <Table content={products} handleEditItem={handleEditItem} />
+          <Table
+            content={products}
+            handleEditItem={handleEditItem}
+            tableTitle="Produtos"
+          />
         </div>
       </LayoutWithSidebar>
       <ModalAddProduct

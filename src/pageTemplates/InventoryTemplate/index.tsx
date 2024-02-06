@@ -38,7 +38,11 @@ export const InventoryTemplate = () => {
               Adicionar Estoque
             </Button>
           </div>
-          <Table content={inventory} handleEditItem={handleEditInventory} />
+          <Table
+            content={inventory}
+            handleEditItem={handleEditInventory}
+            tableTitle="Estoque"
+          />
         </div>
       </LayoutWithSidebar>
       <ModalAddInventory
