@@ -1,11 +1,11 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { Input } from "@/components/Input";
-import { MagnifyingGlass } from "phosphor-react";
-import { memo } from "react";
-import clsx from "clsx";
-import { Spinner } from "./Spinner";
-import { Line } from "./Line";
-import { MOCK_PRODUCTS } from "@/constants/products";
+import { useState } from 'react';
+import { Input } from '@/components/Input';
+import { MagnifyingGlass } from 'phosphor-react';
+import { memo } from 'react';
+import clsx from 'clsx';
+import { Spinner } from './Spinner';
+import { Line } from './Line';
+import { MOCK_PRODUCTS } from '@/constants/products';
 
 interface AutoCompleteItemProps {
   suggestions: any[];
@@ -24,10 +24,10 @@ const AutoCompleteItem = memo(
     return (
       <div
         className={clsx(
-          "bg-white max-h-[100px] w-[400px] overflow-auto rounded transition-all",
+          'bg-white max-h-[100px] w-[400px] overflow-auto rounded transition-all',
           {
-            "h-0": !isOpenSuggestions,
-            "border border-neutral-grey": isOpenSuggestions,
+            'h-0': !isOpenSuggestions,
+            'border border-neutral-grey': isOpenSuggestions,
           }
         )}
       >
@@ -76,7 +76,7 @@ export const AutoCompleteInput = ({ product, setProduct }) => {
         lowercaseSigla.includes(lowercaseQuery)
       );
     });
-    console.log("proucts ==> ", productsFiltered);
+    console.log('proucts ==> ', productsFiltered);
 
     setProductsSuggestions(productsFiltered);
   };
