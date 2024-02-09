@@ -1,6 +1,7 @@
 export const MOCK_INVENTORY = [
   {
     id: "1",
+    code: "BBBCCA23",
     Sigla: "APREDRS",
     Produto: "Apresuntado Sadia",
     Lote: "TRDA",
@@ -12,6 +13,7 @@ export const MOCK_INVENTORY = [
   },
   {
     id: "2",
+    code: "BTAXXXV12",
     Sigla: "MACPSTA",
     Produto: "Macarrão Barilla",
     Lote: "BRLX",
@@ -23,6 +25,7 @@ export const MOCK_INVENTORY = [
   },
   {
     id: "3",
+    code: "3322VVVA",
     Sigla: "SALGRSS",
     Produto: "Sal Grosso",
     Lote: "SGX",
@@ -34,6 +37,7 @@ export const MOCK_INVENTORY = [
   },
   {
     id: "4",
+    code: "AAACCA23",
     Sigla: "BOLMORC",
     Produto: "Bolo de Morango",
     Lote: "BM2024",
@@ -42,5 +46,51 @@ export const MOCK_INVENTORY = [
     Preço: "R$22,80", // Adicionando o preço para o quarto objeto
     DataHora: "31.01.2024 22:45",
     Autor: "Isabel Rodrigues",
+  },
+  {
+    id: "5",
+    code: "BBBCCCAA2",
+    Sigla: "BOLMORC",
+    Produto: "Bolo de Morango",
+    Lote: "CV202501",
+    Validade: "22.01.2026",
+    Quantidade: "5",
+    Preço: "R$21,400", // Adicionando o preço para o quarto objeto
+    DataHora: "31.01.2024 22:45",
+    Autor: "Isabel Rodrigues",
+  },
+];
+
+export const MOCK_OPTIONS_ACTIONS_TYPE = [
+  {
+    label: 'Entrada',
+    value: 'entrada',
+  },
+  {
+    label: 'Saída',
+    value: 'saida',
+  },
+];
+
+export const MOCK_OPTIONS_PAYMENTS_TYPE = [
+  {
+    label: 'Pix',
+    value: 'pix',
+  },
+  {
+    label: 'Cartão de Crédito',
+    value: 'credit-card',
+  },
+  {
+    label: 'Cartão de Débito',
+    value: 'debit-card',
+  },
+  {
+    label: 'Prazo',
+    value: 'prazo',
+  },
+  {
+    label: 'Dinheiro',
+    value: 'money',
   },
 ];

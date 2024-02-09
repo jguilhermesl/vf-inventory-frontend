@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Input } from '@/components/Input';
 import { MagnifyingGlass } from 'phosphor-react';
 import { memo } from 'react';
@@ -7,41 +7,49 @@ import { Spinner } from './Spinner';
 import { Line } from './Line';
 import { MOCK_PRODUCTS } from '@/constants/products';
 
-interface AutoCompleteItemProps {
+interface IAutoCompleteItemProps {
   suggestions: any[];
-  handleClickProduct?: (productId: string) => void;
+  handleClickItem?: (itemId: string) => void;
   isLoading?: boolean;
   isOpenSuggestions: boolean;
+}
+
+interface IAutoCompleteInputProps {
+  item: any;
+  setItem: Dispatch<SetStateAction<any>>;
+  suggestions: any[];
+  setSuggestions: Dispatch<SetStateAction<any[]>>;
+  getItems: (value: string) => Promise<void>;
 }
 
 const AutoCompleteItem = memo(
   ({
     suggestions,
-    handleClickProduct,
+    handleClickItem,
     isLoading,
     isOpenSuggestions,
-  }: AutoCompleteItemProps) => {
+  }: IAutoCompleteItemProps) => {
     return (
       <div
         className={clsx(
-          'bg-white max-h-[100px] w-[400px] overflow-auto rounded transition-all',
+          'bg-white max-h-[200px] w-[400px] overflow-auto rounded transition-all',
           {
             'h-0': !isOpenSuggestions,
             'border border-neutral-grey': isOpenSuggestions,
           }
         )}
       >
-        <ul className="flex flex-1 flex-col gap-2 p-3">
+        <ul className="flex flex-1 flex-col gap-2 p-4">
           {isLoading ? (
             <Spinner />
           ) : (
-            suggestions?.map((product) => (
+            suggestions?.map((item) => (
               <li
-                key={product.id}
-                onClick={() => handleClickProduct(product.id)}
+                key={item.id}
+                onClick={() => handleClickItem(item.id)}
                 className="text-neutral-grey font-poppins text-sm truncate hover:underline hover:text-neutral-darkest cursor-pointer"
               >
-                {product.name}
+                {item.Lote} | {item.Produto} | {item.Preço} | {item.Validade}
                 <Line className="mt-2" />
               </li>
             ))
@@ -52,38 +60,29 @@ const AutoCompleteItem = memo(
   }
 );
 
-export const AutoCompleteInput = ({ product, setProduct }) => {
+export const AutoCompleteInput = ({
+  item,
+  setItem,
+  suggestions,
+  setSuggestions,
+  getItems,
+}: IAutoCompleteInputProps) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
-  const [productsSuggestions, setProductsSuggestions] = useState(MOCK_PRODUCTS);
 
-  const handleClickProduct = (productId: string) => {
-    const productFiltered = productsSuggestions.find((p) => p.id == productId);
-    setProduct(productFiltered.name);
+  const handleClickProduct = (itemId: string) => {
+    console.log('item Id ==> ', itemId);
+    console.log('suggestions ==> ', suggestions);
+
+    const itemFiltered = suggestions.find((p) => p.id == itemId);
+    setItem(
+      `${itemFiltered.Lote} | ${itemFiltered.Produto} | ${itemFiltered.Preço} | ${itemFiltered.Validade}`
+    );
     setOpenSuggestions(false);
   };
 
-  const getProducts = (value: string) => {
-    const lowercaseQuery = value.toLowerCase();
-
-    const productsFiltered = MOCK_PRODUCTS.filter((product) => {
-      const lowercaseName = product.name.toLowerCase();
-      const lowercaseCode = product.code.toLowerCase();
-      const lowercaseSigla = product.sigla.toLowerCase();
-
-      return (
-        lowercaseName.includes(lowercaseQuery) ||
-        lowercaseCode.includes(lowercaseQuery) ||
-        lowercaseSigla.includes(lowercaseQuery)
-      );
-    });
-    console.log('proucts ==> ', productsFiltered);
-
-    setProductsSuggestions(productsFiltered);
-  };
-
   const handleChange = (e) => {
-    getProducts(e.target.value);
-    setProduct(e.target.value);
+    getItems(e.target.value);
+    setItem(e.target.value);
     setOpenSuggestions(true);
   };
 
@@ -92,15 +91,15 @@ export const AutoCompleteInput = ({ product, setProduct }) => {
       <Input
         name="autocomplete"
         className="py-3 w-full border-neutral-light-grey"
-        placeholder="Digite e escolha seu produto"
+        placeholder="Digite o código ou lote do estoque"
         iconRight={<MagnifyingGlass size={20} />}
         onChange={handleChange}
-        value={product}
+        value={item}
       />
 
       <AutoCompleteItem
-        suggestions={productsSuggestions}
-        handleClickProduct={handleClickProduct}
+        suggestions={suggestions}
+        handleClickItem={handleClickProduct}
         // isLoading={isPlacePredictionsLoading}
         isOpenSuggestions={openSuggestions}
       />
