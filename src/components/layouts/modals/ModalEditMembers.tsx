@@ -30,7 +30,7 @@ export const ModalEditMembers = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="mt-6" onSubmit={() => {}}>
+          <form className="mt-6 flex flex-col gap-4" onSubmit={() => {}}>
             <Input label="Nome" value={currentMember && currentMember.name} />
             <Input label="Email" value={currentMember && currentMember.email} />
             <Input label="Cargo" value={currentMember && currentMember.cargo} />

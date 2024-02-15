@@ -30,7 +30,7 @@ export const ModalEditProduct = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="mt-6" onSubmit={() => {}}>
+          <form className="mt-6 flex flex-col gap-4" onSubmit={() => {}}>
             <Input label="Código" value={currentProduct.code} disabled={true} />
             <Input label="Nome" value={currentProduct.name} />
             <Input label="Sigla" value={currentProduct.sigla} />
