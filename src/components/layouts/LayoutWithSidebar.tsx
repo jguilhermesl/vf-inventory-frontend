@@ -3,10 +3,11 @@ import Head from 'next/head';
 import { Sidebar } from './Sidebar';
 import { Paragraph } from '../Paragraph';
 import { Logo } from '../Logo';
-import { List, X } from 'phosphor-react';
+import { List, SignOut, X } from 'phosphor-react';
 import { TABS_SIDEBAR } from '@/constants/sidebar';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 
 type Props = {
   children?: ReactNode;
@@ -18,6 +19,8 @@ export const LayoutWithSidebar = ({
   title = 'This is the default title',
 }: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+
+  const { user, handleSignOut } = useAuth();
 
   return (
     <div className="flex h-full">
@@ -40,7 +43,13 @@ export const LayoutWithSidebar = ({
             </button>
             <Logo className="lg:hidden flex" />
             <div className="flex items-center gap-4">
-              <Paragraph>João Guilherme</Paragraph>
+              <Paragraph>{user.name}</Paragraph>
+              <button
+                className="lg:flex hidden w-8 h-8 rounded-full bg-primary items-center justify-center"
+                onClick={handleSignOut}
+              >
+                <SignOut size={20} color="#fff" />
+              </button>
             </div>
           </header>
           <div className="mt-6 px-4 lg:px-8">{children}</div>

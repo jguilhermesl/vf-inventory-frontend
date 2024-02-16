@@ -1,6 +1,7 @@
 // pages/_app.tsx
 import AuthContextProvider from '@/hooks/useAuth';
 import '@/styles/global.css';
+import 'dotenv/config';
 import Head from 'next/head';
 
 function MyApp({ Component, pageProps }) {

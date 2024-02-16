@@ -1,13 +1,13 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useState } from "react";
-import { MOCK_MEMBERS } from "@/constants/members";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddMember } from "../../components/layouts/modals/ModalAddMembers";
-import { ModalEditMembers } from "@/components/layouts/modals/ModalEditMembers";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useState } from 'react';
+import { MOCK_MEMBERS } from '@/constants/members';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddMember } from '@/components/layouts/modals/ModalAddMembers';
+import { ModalEditMembers } from '@/components/layouts/modals/ModalEditMembers';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState(MOCK_MEMBERS);
@@ -15,11 +15,16 @@ export const MembersTemplate = () => {
   const [modalEditMemberIsOpen, setModalEditMemberIsOpen] = useState(false);
   const [currentMember, setCurrentMember] = useState({});
 
+  const fetchMembers = async () => {
+    // await fetchAllUsers = {}
+  };
+
   const handleEditMember = (memberId: string) => {
     const item = members.find((member) => member.id == memberId);
     setCurrentMember(item);
     setModalEditMemberIsOpen(true);
   };
+
   return (
     <>
       <LayoutWithSidebar>
