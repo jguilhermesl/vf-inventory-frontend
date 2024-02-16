@@ -1,43 +1,27 @@
-import { addProduct, IAddProductBody } from '@/api/products';
+import { IAddProductBody } from '@/api/products';
 import { Button, ButtonVariant } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
 import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
 import { Spinner } from '@/components/Spinner';
-import { handleToast } from '@/utils/handleToast';
 import { addProductSchema } from '@/validation/products';
 import { useFormik } from 'formik';
 import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
-  handleUpdateTable: () => Promise<void>;
+  handleAddProduct: (values: IAddProductBody) => Promise<void>;
+  isLoading?: boolean;
 }
 
 export const ModalAddProduct = ({
   setModalIsOpen,
   modalIsOpen,
-  handleUpdateTable,
+  isLoading,
+  handleAddProduct,
 }: IModalAddProductProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleAddProduct = async ({ name, sigla }: IAddProductBody) => {
-    setIsLoading(true);
-    try {
-      const response = await addProduct({ name, sigla });
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-      setModalIsOpen(false);
-      handleToast('Produto adicionado com sucesso.', 'success');
-      handleUpdateTable();
-    }
-  };
-
   const formik = useFormik({
     initialValues: {
       name: '',
