@@ -1,25 +1,56 @@
-import { Button } from "@/components/Button";
-import { Heading } from "@/components/Heading";
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { ModalAddProduct } from "@/components/layouts/modals/ModalAddProduct";
-import { ModalEditProduct } from "@/components/layouts/modals/ModalEditProduct";
-import { Paragraph } from "@/components/Paragraph";
-import { Table } from "@/components/Table";
-import { MOCK_PRODUCTS } from "@/constants/products";
-import { PlusCircle } from "phosphor-react";
-import { useState } from "react";
+import { deleteProduct, fetchProducts } from '@/api/products';
+import { Button } from '@/components/Button';
+import { Heading } from '@/components/Heading';
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { ModalAddProduct } from '@/components/layouts/modals/ModalAddProduct';
+import { ModalEditProduct } from '@/components/layouts/modals/ModalEditProduct';
+import { Paragraph } from '@/components/Paragraph';
+import { Table } from '@/components/Table';
+import { MOCK_PRODUCTS } from '@/constants/products';
+import { handleToast } from '@/utils/handleToast';
+import { PlusCircle } from 'phosphor-react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const ProductsTemplate = () => {
   const [modalAddProductIsOpen, setModalAddProductIsOpen] = useState(false);
   const [modalEditProductIsOpen, setModalEditProductIsOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState({});
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleEditItem = (productId: string) => {
     const item = products.find((product) => product.id == productId);
     setCurrentProduct(item);
     setModalEditProductIsOpen(true);
   };
+
+  const handleDeleteItem = async (productId: string) => {
+    setIsLoading(true);
+    try {
+      await deleteProduct(productId);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleFetchProducts();
+      setIsLoading(false);
+      handleToast('Produto deletado com sucesso.', 'success');
+    }
+  };
+
+  const handleFetchProducts = useCallback(async () => {
+    try {
+      const response = await fetchProducts();
+      setProducts(response.products);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleFetchProducts();
+  }, []);
 
   return (
     <>
@@ -41,13 +72,16 @@ export const ProductsTemplate = () => {
           <Table
             content={products}
             handleEditItem={handleEditItem}
+            handleDeleteItem={handleDeleteItem}
             tableTitle="Produtos"
+            isLoading={isLoading}
           />
         </div>
       </LayoutWithSidebar>
       <ModalAddProduct
         modalIsOpen={modalAddProductIsOpen}
         setModalIsOpen={setModalAddProductIsOpen}
+        handleUpdateTable={handleFetchProducts}
       />
       <ModalEditProduct
         modalIsOpen={modalEditProductIsOpen}

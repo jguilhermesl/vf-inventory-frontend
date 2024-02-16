@@ -1,6 +1,6 @@
 import { IUserData } from '@/@types/user';
 import api from '@/api/axios';
-import { handleLogin } from '@/api/login';
+import { handleLogin, ILoginBody } from '@/api/login';
 import { getProfile } from '@/api/user';
 import { handleToast } from '@/utils/handleToast';
 import { isPublicRoute } from '@/utils/isPublicRoute';
@@ -11,8 +11,11 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
+
+import { parseCookies, destroyCookie, setCookie } from 'nookies';
 
 export interface AuthProviderProps {
   children: ReactNode;
@@ -20,8 +23,8 @@ export interface AuthProviderProps {
 
 export interface AuthContextDataProps {
   isAuthenticated: boolean;
-  handleAuth: (email: string, password: string) => Promise<void>;
   user: IUserData;
+  handleAuth: ({ email, password }: ILoginBody) => Promise<void>;
   handleSignOut: () => void;
 }
 
@@ -36,64 +39,65 @@ export default function AuthContextProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleAuth = async (email: string, password: string) => {
-    const { token } = await handleLogin({ email, password });
-
-    if (!token) {
-      handleSignOut();
-      handleToast('Credenciais inválidas.', 'error');
-      return;
-    }
-
-    handleAuthenticateUser(token);
-  };
-
   const handleSignOut = () => {
-    localStorage.removeItem('userToken');
-    setUser({} as IUserData);
-    setIsAuthenticated(false);
-    router.replace('/');
+    try {
+      destroyCookie(undefined, '@nextauth.token');
+      router.push('/');
+    } catch {
+      console.log('Erro ao deslogar.');
+    }
   };
 
-  const handleGetStorageToken = useCallback(async () => {
-    const token = localStorage.getItem('userToken');
+  async function handleAuth({ email, password }: ILoginBody) {
+    try {
+      const response = await handleLogin({ email, password });
+      const { token } = response;
 
-    if (!token && !isAuthenticated) {
-      handleSignOut();
-      return;
+      setCookie(undefined, '@nextauth.token', token, {
+        maxAge: 60 * 60 * 24 * 30,
+        path: '/',
+      });
+
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
+      router.push('/inventory');
+      handleToast('Bem vindo de volta!', 'success');
+    } catch (error) {
+      handleToast('Credenciais inválidas.', 'error');
+      console.log(error);
     }
-
-    if (!token && !isPublicRoute(pathname)) {
-      return;
-    }
-
-    await handleAuthenticateUser(token);
-  }, []);
-
-  const handleAuthenticateUser = useCallback(async (token) => {
-    api.defaults.headers['Authorization'] = `Bearer ${token}`;
-    const user = await getProfile();
-    setUser(user.user);
-    setIsAuthenticated(true);
-    localStorage.setItem('userToken', token);
-    router.replace('/inventory');
-  }, []);
+  }
 
   useEffect(() => {
-    handleGetStorageToken();
-  }, [handleGetStorageToken]);
+    const { '@nextauth.token': token } = parseCookies();
+    api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+    if (token) {
+      getProfile()
+        .then((response) => {
+          const { name, email, role } = response.user;
+
+          setUser({
+            name,
+            email,
+            role,
+          });
+        })
+        .catch((err) => console.log('Error ', err));
+    }
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      isAuthenticated: isAuthenticated,
+      user: user,
+      handleAuth,
+      handleSignOut,
+    }),
+    [isAuthenticated, user.name, handleAuth, handleSignOut]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated,
-        handleAuth,
-        user,
-        handleSignOut,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 

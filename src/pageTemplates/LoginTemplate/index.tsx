@@ -17,7 +17,8 @@ export const LoginTemplate = () => {
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => handleAuth(values.email, values.password),
+    onSubmit: (values) =>
+      handleAuth({ email: values.email, password: values.password }),
   });
 
   return (
