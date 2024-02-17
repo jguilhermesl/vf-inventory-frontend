@@ -10,10 +10,12 @@ import { AutoCompleteInput } from "@/components/AutoCompleteInput";
 import { Dropdown } from "@/components/Dropdown";
 import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
+import { IAddInventoryBody } from "@/api/inventory";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
+  handleAddInventory: (values: IAddInventoryBody) => Promise<void>;
 }
 
 const MOCK_OPTIONS = [
