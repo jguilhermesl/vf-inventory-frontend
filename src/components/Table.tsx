@@ -1,21 +1,22 @@
-import React from 'react';
-import 'jspdf-autotable';
+import React from "react";
+import "jspdf-autotable";
 import {
   FileCsv,
   FilePdf,
   MagnifyingGlass,
   PencilLine,
   Trash,
-} from 'phosphor-react';
-import { Line } from './Line';
-import { Paragraph, ParagraphSizeVariant } from './Paragraph';
-import { ReactNode } from 'react';
-import { Input } from './Input';
-import clsx from 'clsx';
-import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
-import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
-import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
-import { Spinner } from './Spinner';
+} from "phosphor-react";
+import { Line } from "./Line";
+import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
+import { ReactNode } from "react";
+import { Input } from "./Input";
+import clsx from "clsx";
+import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
+import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
+import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
+import { Spinner } from "./Spinner";
+
 interface ITableProps {
   content: any[];
   showIdColumn?: false;
@@ -46,7 +47,7 @@ export const Table = ({
   isLoading,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != 'id')
+    ? Object.keys(content[0]).filter((item) => item != "id")
     : [];
 
   const columnsQuantity = titles.length;
@@ -131,13 +132,13 @@ export const Table = ({
                           className={`flex min-w-[180px]`}
                           style={{ width: calculateWidthSize() }}
                         >
-                          {title == 'Modalidade' ? (
+                          {title == "Modalidade" ? (
                             <div
                               className={clsx(
-                                'flex items-center rounded text-center w-[80px] py-2',
+                                "flex items-center rounded text-center w-[80px] py-2",
                                 {
-                                  'bg-red-400': item[title] === 'Saida',
-                                  'bg-green-400': item[title] === 'Entrada',
+                                  "bg-red-400": item[title] === "Saida",
+                                  "bg-green-400": item[title] === "Entrada",
                                 }
                               )}
                             >

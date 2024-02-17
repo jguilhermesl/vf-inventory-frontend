@@ -1,3 +1,4 @@
+import { ICreateUserBody } from "@/api/user";
 import { Button, ButtonVariant } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Modal } from "@/components/Modal";
@@ -10,20 +11,20 @@ import { Dispatch, SetStateAction } from "react";
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
+  handleAddMember: (values: ICreateUserBody) => Promise<void>;
 }
 
 export const ModalAddMember = ({
   setModalIsOpen,
   modalIsOpen,
+  handleAddMember,
 }: IModalAddProductProps) => {
-  const handleAddMember = () => {};
-
   const formik = useFormik({
     initialValues: {
       name: "",
       email: "",
-      cargo: "",
-      senha: "",
+      role: "member",
+      password: "",
     },
     validationSchema: addMemberSchema,
     onSubmit: handleAddMember,
@@ -56,12 +57,12 @@ export const ModalAddMember = ({
             />
             <Input
               label="Cargo"
-              error={formik.errors?.cargo as string}
+              error={formik.errors?.role as string}
               {...formik.getFieldProps("cargo")}
             />
             <Input
               label="Senha"
-              error={formik.errors?.senha as string}
+              error={formik.errors?.password as string}
               {...formik.getFieldProps("senha")}
             />
             <Button
