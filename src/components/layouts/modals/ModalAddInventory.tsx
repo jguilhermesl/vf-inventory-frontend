@@ -1,49 +1,58 @@
-import { Button, ButtonVariant } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { Modal } from "@/components/Modal";
-import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
-import { addInventorySchema } from "@/validation/inventory";
-import { useFormik } from "formik";
-import { CheckCircle, XCircle } from "phosphor-react";
-import { Dispatch, SetStateAction, useState } from "react";
-import { AutoCompleteInput } from "@/components/AutoCompleteInput";
-import { Dropdown } from "@/components/Dropdown";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
-import { convertFormatValidity } from "@/utils/convertFormatValidity";
+import { Button, ButtonVariant } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { Modal } from '@/components/Modal';
+import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
+import { addInventorySchema } from '@/validation/inventory';
+import { useFormik } from 'formik';
+import { CheckCircle, XCircle } from 'phosphor-react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { AutoCompleteInput } from '@/components/AutoCompleteInput';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { convertFormatValidity } from '@/utils/convertFormatValidity';
+import { fetchProducts } from '@/api/products';
+import { IAddInventoryBody } from '@/@types/inventory';
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
+  handleAddInventory: (values: IAddInventoryBody) => Promise<void>;
 }
-
-const MOCK_OPTIONS = [
-  {
-    label: "Lote Novo",
-    value: "new",
-  },
-  {
-    label: "Lote Existente",
-    value: "existing",
-  },
-];
 
 export const ModalAddInventory = ({
   setModalIsOpen,
   modalIsOpen,
+  handleAddInventory,
 }: IModalAddProductProps) => {
-  const handleAddMember = () => {};
+  const [suggestions, setSuggestions] = useState([]);
+
+  const handleGetProductsSuggestions = useCallback(async (value: string) => {
+    const lowercaseQuery = value.toLowerCase();
+    const { products } = await fetchProducts();
+
+    const productsFiltered = products.filter((product) => {
+      const lowercaseName = product.name.toLowerCase();
+      const lowercaseSigla = product.sigla.toLowerCase();
+
+      return (
+        lowercaseName.includes(lowercaseQuery) ||
+        lowercaseSigla.includes(lowercaseQuery)
+      );
+    });
+
+    setSuggestions(productsFiltered);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
-      quantity: "",
-      price: "",
-      validity: "",
+      quantity: 0,
+      price: 0,
+      validity: '',
+      lot: '',
+      productId: '',
     },
     validationSchema: addInventorySchema,
-    onSubmit: handleAddMember,
+    onSubmit: handleAddInventory,
   });
-
-  const [inventory, setInventory] = useState("");
 
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
@@ -59,35 +68,45 @@ export const ModalAddInventory = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="flex flex-col gap-4" onSubmit={() => {}}>
-            <label> Produto</label>
-            <AutoCompleteInput product={inventory} setProduct={setInventory} />
-            <Dropdown options={MOCK_OPTIONS} label="Lote" />
+          <form className="flex flex-col gap-4" onSubmit={formik.handleSubmit}>
+            <label>Produto</label>
+            <AutoCompleteInput
+              setItem={(productId: string) =>
+                formik.setFieldValue('productId', productId)
+              }
+              getItems={handleGetProductsSuggestions}
+              suggestions={suggestions}
+            />
+            <Input
+              label="Lote"
+              error={formik.errors?.lot as string}
+              {...formik.getFieldProps('lot')}
+            />
             <Input
               type="number"
               label="Quantidade"
               error={formik.errors?.quantity as string}
-              {...formik.getFieldProps("quantity")}
-              placeholder="0"
+              {...formik.getFieldProps('quantity')}
+              placeholder="Digite a quantidade"
             />
             <Input
               label="Preço"
               error={formik.errors?.price as string}
-              {...formik.getFieldProps("price")}
+              {...formik.getFieldProps('price')}
               placeholder="R$"
               onChange={(e) => {
                 const formattedValue = convertRealToQuantity(e.target.value);
-                formik.setFieldValue("price", formattedValue);
+                formik.setFieldValue('price', formattedValue);
               }}
             />
             <Input
               label="Validade"
               error={formik.errors?.validity as string}
-              {...formik.getFieldProps("validity")}
+              {...formik.getFieldProps('validity')}
               placeholder="DD.MM.AAAA"
               onChange={(e) => {
                 const formattedValue = convertFormatValidity(e.target.value);
-                formik.setFieldValue("validity", formattedValue);
+                formik.setFieldValue('validity', formattedValue);
               }}
             />
             <Button

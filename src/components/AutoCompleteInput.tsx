@@ -5,7 +5,8 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { Spinner } from './Spinner';
 import { Line } from './Line';
-import { MOCK_PRODUCTS } from '@/constants/products';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
 
 interface IAutoCompleteItemProps {
   suggestions: any[];
@@ -15,10 +16,8 @@ interface IAutoCompleteItemProps {
 }
 
 interface IAutoCompleteInputProps {
-  item: any;
-  setItem: Dispatch<SetStateAction<any>>;
+  setItem: Dispatch<SetStateAction<string>>;
   suggestions: any[];
-  setSuggestions: Dispatch<SetStateAction<any[]>>;
   getItems: (value: string) => Promise<void>;
 }
 
@@ -49,7 +48,15 @@ const AutoCompleteItem = memo(
                 onClick={() => handleClickItem(item.id)}
                 className="text-neutral-grey font-poppins text-sm truncate hover:underline hover:text-neutral-darkest cursor-pointer"
               >
-                {item.Lote} | {item.Produto} | {item.Preço} | {item.Validade}
+                {item?.name && `${item.name} | `}
+                {item?.sigla && `${item.sigla} `}
+                {item?.lot && `${item.lot} | `}
+                {item?.product ||
+                  (item?.productName &&
+                    `${item?.product || item?.productName} | `)}
+                {item?.price &&
+                  `${convertRealToQuantity(item?.price?.toString())} | `}
+                {item?.validity && formatDateToDDMMYYYY(item?.validity)}
                 <Line className="mt-2" />
               </li>
             ))
@@ -61,28 +68,43 @@ const AutoCompleteItem = memo(
 );
 
 export const AutoCompleteInput = ({
-  item,
   setItem,
   suggestions,
-  setSuggestions,
   getItems,
 }: IAutoCompleteInputProps) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
+  const [value, setValue] = useState('');
 
   const handleClickProduct = (itemId: string) => {
-    console.log('item Id ==> ', itemId);
-    console.log('suggestions ==> ', suggestions);
-
     const itemFiltered = suggestions.find((p) => p.id == itemId);
-    setItem(
-      `${itemFiltered.Lote} | ${itemFiltered.Produto} | ${itemFiltered.Preço} | ${itemFiltered.Validade}`
-    );
+    const formattedString =
+      `${itemFiltered?.name ? `${itemFiltered.name} | ` : ''}` +
+      `${itemFiltered?.sigla ? `${itemFiltered.sigla} ` : ''}` +
+      `${itemFiltered?.lot ? `${itemFiltered.lot} | ` : ''}` +
+      `${
+        itemFiltered?.product || itemFiltered?.productName
+          ? `${itemFiltered?.product || itemFiltered?.productName} | `
+          : ''
+      }` +
+      `${
+        itemFiltered?.price
+          ? `${convertRealToQuantity(itemFiltered?.price?.toString())} | `
+          : ''
+      }` +
+      `${
+        itemFiltered?.validity
+          ? formatDateToDDMMYYYY(itemFiltered?.validity)
+          : ''
+      }`;
+
+    setValue(formattedString);
+    setItem(itemFiltered.id);
     setOpenSuggestions(false);
   };
 
   const handleChange = (e) => {
     getItems(e.target.value);
-    setItem(e.target.value);
+    setValue(e.target.value);
     setOpenSuggestions(true);
   };
 
@@ -94,7 +116,7 @@ export const AutoCompleteInput = ({
         placeholder="Digite o código ou lote do estoque"
         iconRight={<MagnifyingGlass size={20} />}
         onChange={handleChange}
-        value={item}
+        value={value}
       />
 
       <AutoCompleteItem

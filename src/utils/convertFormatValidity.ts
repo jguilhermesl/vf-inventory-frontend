@@ -7,7 +7,7 @@ export const convertFormatValidity = (value) => {
   const limitedValue = numericValue.slice(0, 8);
   const formattedValue = limitedValue.replace(
     /(\d{2})(\d{2})(\d{4})/,
-    "$1.$2.$3"
+    "$1/$2/$3"
   );
 
   return formattedValue;

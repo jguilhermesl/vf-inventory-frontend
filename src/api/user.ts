@@ -29,12 +29,8 @@ export const addUser = async (data: ICreateUserBody) => {
 };
 
 export const fetchAllUsers = async () => {
-  try {
-    const response = await api.get("/users");
-    return response.data;
-  } catch (err) {
-    throw err;
-  }
+  const response = await api.get("/users");
+  return response.data;
 };
 
 export const deleteUser = async (userId) => {

@@ -19,8 +19,6 @@ export const ActionInventoryTemplate = () => {
   const [actionType, setActionType] = useState('');
   const [paymentType, setPaymentType] = useState('');
 
-  useEffect(() => {}, []);
-
   const handleGetInventory = useCallback(async (value: string) => {
     const lowercaseQuery = value.toLowerCase();
     // const inventory = await getInventory();
