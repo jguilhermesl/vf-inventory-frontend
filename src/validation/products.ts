@@ -4,3 +4,8 @@ export const addProductSchema = Yup.object().shape({
   name: Yup.string().required("Campo obrigatório"),
   sigla: Yup.string().required("Campo obrigatório"),
 });
+
+export const editProductSchema = Yup.object().shape({
+  name: Yup.string().required("Campo obrigatório"),
+  sigla: Yup.string().required("Campo obrigatório"),
+});

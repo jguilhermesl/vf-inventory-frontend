@@ -16,6 +16,7 @@ import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
 import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
 import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
 import { Spinner } from './Spinner';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
 
 interface ITableProps {
   content: any[];
@@ -56,6 +57,8 @@ export const Table = ({
     const widthSize = Number((100 / (titles.length + 1)).toFixed(0));
     return `${widthSize}%`;
   };
+
+  console.log(titles);
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
@@ -124,7 +127,7 @@ export const Table = ({
                 <tbody className={`flex flex-col gap-4 mt-4 w-full ml-4`}>
                   {content.map((item) => (
                     <tr
-                      key={item.name}
+                      key={item.id}
                       className="w-full flex hover:bg-background  py-4 border-b border-b-[#00000010]"
                     >
                       {titles.map((title) => (
@@ -143,7 +146,11 @@ export const Table = ({
                               )}
                             >
                               <Paragraph className="text-white font-bold flex mx-auto">
-                                {item[title]}
+                                {item[title] === 'price'
+                                  ? convertRealToQuantity(
+                                      item[title].toString()
+                                    )
+                                  : item[title]}
                               </Paragraph>
                             </div>
                           ) : (

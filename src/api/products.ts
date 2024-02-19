@@ -1,3 +1,4 @@
+import { IEditProduct } from "@/@types/product";
 import api from "./axios";
 
 export interface IAddProductBody {
@@ -6,28 +7,21 @@ export interface IAddProductBody {
 }
 
 export const fetchProducts = async () => {
-  try {
-    const response = await api.get("/products");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get("/products");
+  return response.data;
 };
 
 export const deleteProduct = async (productId) => {
-  try {
-    const response = await api.delete("/products/" + productId);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.delete("/products/" + productId);
+  return response.data;
+};
+
+export const editProduct = async (data: IEditProduct, productId: string) => {
+  const response = await api.put("/products/" + productId, data);
+  return response.data;
 };
 
 export const addProduct = async (data: IAddProductBody) => {
-  try {
-    const response = await api.post("/products", data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.post("/products", data);
+  return response.data;
 };

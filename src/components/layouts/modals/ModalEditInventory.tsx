@@ -1,33 +1,43 @@
-import { Button, ButtonVariant } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { Modal } from "@/components/Modal";
-import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
-import { CheckCircle, XCircle } from "phosphor-react";
-import { Dispatch, SetStateAction } from "react";
-import { Dropdown } from "@/components/Dropdown";
+import { Button, ButtonVariant } from '@/components/Button';
+import { Input } from '@/components/Input';
+import { Modal } from '@/components/Modal';
+import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
+import { CheckCircle, XCircle } from 'phosphor-react';
+import { Dispatch, SetStateAction } from 'react';
+import { Dropdown } from '@/components/Dropdown';
+import { useFormik } from 'formik';
+import { IEditInventoryBody } from '@/@types/inventory';
+import { editInventorySchema } from '@/validation/inventory';
+import { convertFormatValidity } from '@/utils/convertFormatValidity';
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
 
 interface IModalEditInventoryProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
   currentInventory: any;
+  handleEditInventory: (values: IEditInventoryBody) => Promise<void>;
 }
-
-const MOCK_OPTIONS = [
-  {
-    label: "Lote Novo",
-    value: "new",
-  },
-  {
-    label: "Lote Existente",
-    value: "existing",
-  },
-];
 
 export const ModalEditInventory = ({
   setModalIsOpen,
   modalIsOpen,
   currentInventory,
+  handleEditInventory,
 }: IModalEditInventoryProps) => {
+  console.log(currentInventory);
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      lot: currentInventory?.lot || '',
+      price: currentInventory?.price || '',
+      quantity: currentInventory?.quantity || '',
+      validity: formatDateToDDMMYYYY(currentInventory?.validity) || '',
+    },
+    validationSchema: editInventorySchema,
+    onSubmit: (values) => handleEditInventory(values),
+  });
+
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
       <Modal.Content>
@@ -42,24 +52,36 @@ export const ModalEditInventory = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="flex flex-col gap-4" onSubmit={() => {}}>
+          <form className="flex flex-col gap-4" onSubmit={formik.handleSubmit}>
             <Input
-              value={currentInventory && currentInventory.Produto}
+              value={currentInventory && currentInventory.productName}
               disabled
               label="Produto"
             />
-            <Dropdown options={MOCK_OPTIONS} label="Lote" />
+            <Input
+              label="Lote"
+              error={formik.errors?.lot as string}
+              {...formik.getFieldProps('lot')}
+            />
             <Input
               label="Validade"
-              value={currentInventory && currentInventory.Validade}
+              error={formik.errors?.validity as string}
+              {...formik.getFieldProps('validity')}
+              placeholder="DD/MM/AAAA"
+              onChange={(e) => {
+                const formattedValue = convertFormatValidity(e.target.value);
+                formik.setFieldValue('validity', formattedValue);
+              }}
             />
             <Input
               label="Quantidade"
-              value={currentInventory && currentInventory.Quantidade}
+              error={formik.errors?.lot as string}
+              {...formik.getFieldProps('quantity')}
             />
             <Input
               label="Preço"
-              value={currentInventory && currentInventory.Preço}
+              error={formik.errors?.lot as string}
+              {...formik.getFieldProps('price')}
             />
 
             <Button

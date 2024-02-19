@@ -1,20 +1,25 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useCallback, useEffect, useState } from "react";
-import { MOCK_INVENTORY } from "@/constants/inventory";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddInventory } from "../../components/layouts/modals/ModalAddInventory";
-import { ModalEditInventory } from "@/components/layouts/modals/ModalEditInventory";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useCallback, useEffect, useState } from 'react';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddInventory } from '../../components/layouts/modals/ModalAddInventory';
+import { ModalEditInventory } from '@/components/layouts/modals/ModalEditInventory';
 import {
-  IAddInventoryBody,
   addInventory,
   deleteInventory,
   fetchInventory,
-} from "@/api/inventory";
-import { handleToast } from "@/utils/handleToast";
+  editInventory,
+} from '@/api/inventory';
+import { handleToast } from '@/utils/handleToast';
+import { formatCurrencyToFloat } from '@/utils/formatCurrencyToFloat';
+import {
+  IAddInventoryBody,
+  IEditInventoryBody,
+  IInventoryModel,
+} from '@/@types/inventory';
 
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState([]);
@@ -22,40 +27,9 @@ export const InventoryTemplate = () => {
   const [modalEditInventoryIsOpen, setModalEditInventoryIsOpen] =
     useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentInventory, setCurrentInventory] = useState({});
-
-  const handleEditInventory = (inventoryId: string) => {
-    const item = inventory.find((inventory) => inventory.id === inventoryId);
-    setCurrentInventory(item);
-    setModalEditInventoryIsOpen(true);
-  };
-
-  const handleAddInventory = async ({
-    lot,
-    price,
-    productId,
-    quantity,
-    validity,
-  }: IAddInventoryBody) => {
-    setIsLoading(true);
-    try {
-      const response = await addInventory({
-        lot,
-        price,
-        productId,
-        quantity,
-        validity,
-      });
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-      setModalAddInventoryIsOpen(false);
-      handleToast("Estoque adicionado com sucesso.", "success");
-      handleFetchInventory();
-    }
-  };
+  const [currentInventory, setCurrentInventory] = useState(
+    {} as IInventoryModel
+  );
 
   const handleFetchInventory = useCallback(async () => {
     try {
@@ -68,9 +42,55 @@ export const InventoryTemplate = () => {
     }
   }, []);
 
-  useEffect(() => {
-    handleFetchInventory();
-  }, []);
+  const handleOpenEditInventory = (inventoryId: string) => {
+    const item = inventory.find((inventory) => inventory.id === inventoryId);
+    setCurrentInventory(item);
+    setModalEditInventoryIsOpen(true);
+  };
+
+  const handleEditInventory = async (values: IEditInventoryBody) => {
+    setIsLoading(true);
+    try {
+      await editInventory(values, currentInventory.id);
+      await handleFetchInventory();
+      handleToast('Estoque editado com sucesso.', 'success');
+    } catch (err) {
+      if (err.response.data.err) {
+        handleToast(err.response.data.err, 'error');
+        return;
+      }
+      handleToast('Erro ao editar membro.', 'error');
+    } finally {
+      setIsLoading(false);
+      setModalEditInventoryIsOpen(false);
+    }
+  };
+
+  const handleAddInventory = async ({
+    lot,
+    price,
+    productId,
+    quantity,
+    validity,
+  }: IAddInventoryBody) => {
+    setIsLoading(true);
+    try {
+      await addInventory({
+        lot,
+        price: formatCurrencyToFloat(price),
+        productId,
+        quantity,
+        validity,
+      });
+      handleToast('Estoque adicionado com sucesso.', 'success');
+      setModalAddInventoryIsOpen(false);
+      handleFetchInventory();
+    } catch (err) {
+      handleToast('Algo aconteceu de errado.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleDeleteItem = async (inventoryId: string) => {
     setIsLoading(true);
@@ -81,9 +101,13 @@ export const InventoryTemplate = () => {
     } finally {
       handleFetchInventory();
       setIsLoading(false);
-      handleToast("Estoque deletado com sucesso.", "success");
+      handleToast('Estoque deletado com sucesso.', 'success');
     }
   };
+
+  useEffect(() => {
+    handleFetchInventory();
+  }, [handleFetchInventory]);
 
   return (
     <>
@@ -104,9 +128,10 @@ export const InventoryTemplate = () => {
           </div>
           <Table
             content={inventory}
-            handleEditItem={handleEditInventory}
+            handleEditItem={handleOpenEditInventory}
             tableTitle="Estoque"
             handleDeleteItem={handleDeleteItem}
+            isLoading={isLoading}
           />
         </div>
       </LayoutWithSidebar>
@@ -119,6 +144,7 @@ export const InventoryTemplate = () => {
         modalIsOpen={modalEditInventoryIsOpen}
         setModalIsOpen={setModalEditInventoryIsOpen}
         currentInventory={currentInventory}
+        handleEditInventory={handleEditInventory}
       />
     </>
   );
