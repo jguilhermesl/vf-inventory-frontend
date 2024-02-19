@@ -82,7 +82,7 @@ export default function AuthContextProvider({ children }: AuthProviderProps) {
             role,
           });
         })
-        .catch((err) => console.log('Error ', err));
+        .catch((err) => handleSignOut());
     }
   }, []);
 

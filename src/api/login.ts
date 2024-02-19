@@ -10,6 +10,6 @@ export const handleLogin = async (data: ILoginBody) => {
     const response = await api.post("/users/signin", data)
     return response.data;
   } catch (err) {
-    return err;
+    throw err;
   }
 }
