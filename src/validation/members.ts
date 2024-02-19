@@ -5,6 +5,15 @@ export const addMemberSchema = Yup.object().shape({
   email: Yup.string()
     .email("Digite um e-mail válido")
     .required("Campo obrigatório"),
-  senha: Yup.string().required("Campo obrigatório"),
-  cargo: Yup.string().required("Campo obrigatório"),
+  password: Yup.string().required("Campo obrigatório"),
+  role: Yup.string().required("Campo obrigatório"),
+});
+
+export const editMemberSchema = Yup.object().shape({
+  name: Yup.string().required("Campo obrigatório"),
+  email: Yup.string()
+    .email("Digite um e-mail válido")
+    .required("Campo obrigatório"),
+  password: Yup.string(),
+  role: Yup.string().required("Campo obrigatório"),
 });

@@ -44,14 +44,13 @@ export const ProductsTemplate = () => {
   const handleAddProduct = async ({ name, sigla }: IAddProductBody) => {
     setIsLoading(true);
     try {
-      const response = await addProduct({ name, sigla });
-      console.log(response);
+      await addProduct({ name, sigla });
+      handleToast('Produto adicionado com sucesso.', 'success');
+      setModalAddProductIsOpen(false);
     } catch (err) {
-      console.log(err);
+      handleToast('Erro ao adicionar produto.', 'error');
     } finally {
       setIsLoading(false);
-      setModalAddProductIsOpen(false);
-      handleToast('Produto adicionado com sucesso.', 'success');
       handleFetchProducts();
     }
   };

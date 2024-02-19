@@ -16,6 +16,7 @@ import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
 import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
 import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
 import { Spinner } from './Spinner';
+
 interface ITableProps {
   content: any[];
   showIdColumn?: false;
