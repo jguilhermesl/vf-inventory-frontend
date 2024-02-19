@@ -6,16 +6,21 @@ export interface ICreateUserBody {
   password: string;
   email: string;
 }
-// export interface IEditUserBody {
-//   name?: string;
-//   role?: "admin" | "member";
-//   password?: string;
-//   email?: string;
-// }
+
+export interface IEditUserBody {
+  name?: string;
+  role?: "admin" | "member";
+  password?: string;
+  email?: string;
+}
 
 export const getProfile = async () => {
-  const response = await api.get("/me");
-  return response.data;
+  try {
+    const response = await api.get("/me");
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const addUser = async (data: ICreateUserBody) => {
@@ -24,15 +29,24 @@ export const addUser = async (data: ICreateUserBody) => {
 };
 
 export const fetchAllUsers = async () => {
-  const response = await api.get("/users");
+  try {
+    const response = await api.get("/users");
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteUser = async (userId) => {
+  const response = await api.delete("/users/" + userId);
   return response.data;
 };
 
-export const deleteUser = async (userID) => {
-  const response = await api.delete("/users/" + userID);
-  return response.data;
-};
-export const editUser = async (data) => {
-  const response = await api.put("/users/" + data);
-  return response.data;
+export const editUser = async (data, userId) => {
+  try {
+    const response = await api.put("/users/" + userId, data);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
 };

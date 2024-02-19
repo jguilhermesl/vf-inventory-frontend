@@ -3,17 +3,17 @@ import {
   deleteProduct,
   fetchProducts,
   IAddProductBody,
-} from "@/api/products";
-import { Button } from "@/components/Button";
-import { Heading } from "@/components/Heading";
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { ModalAddProduct } from "@/components/layouts/modals/ModalAddProduct";
-import { ModalEditProduct } from "@/components/layouts/modals/ModalEditProduct";
-import { Paragraph } from "@/components/Paragraph";
-import { Table } from "@/components/Table";
-import { handleToast } from "@/utils/handleToast";
-import { PlusCircle } from "phosphor-react";
-import { useCallback, useEffect, useState } from "react";
+} from '@/api/products';
+import { Button } from '@/components/Button';
+import { Heading } from '@/components/Heading';
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { ModalAddProduct } from '@/components/layouts/modals/ModalAddProduct';
+import { ModalEditProduct } from '@/components/layouts/modals/ModalEditProduct';
+import { Paragraph } from '@/components/Paragraph';
+import { Table } from '@/components/Table';
+import { handleToast } from '@/utils/handleToast';
+import { PlusCircle } from 'phosphor-react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const ProductsTemplate = () => {
   const [modalAddProductIsOpen, setModalAddProductIsOpen] = useState(false);
@@ -37,21 +37,20 @@ export const ProductsTemplate = () => {
     } finally {
       handleFetchProducts();
       setIsLoading(false);
-      handleToast("Produto deletado com sucesso.", "success");
+      handleToast('Produto deletado com sucesso.', 'success');
     }
   };
 
   const handleAddProduct = async ({ name, sigla }: IAddProductBody) => {
     setIsLoading(true);
     try {
-      const response = await addProduct({ name, sigla });
-      console.log(response);
+      await addProduct({ name, sigla });
+      handleToast('Produto adicionado com sucesso.', 'success');
+      setModalAddProductIsOpen(false);
     } catch (err) {
-      console.log(err);
+      handleToast('Erro ao adicionar produto.', 'error');
     } finally {
       setIsLoading(false);
-      setModalAddProductIsOpen(false);
-      handleToast("Produto adicionado com sucesso.", "success");
       handleFetchProducts();
     }
   };

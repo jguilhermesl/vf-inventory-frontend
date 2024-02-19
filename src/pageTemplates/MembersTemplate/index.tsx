@@ -1,26 +1,29 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useCallback, useEffect, useState } from "react";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddMember } from "@/components/layouts/modals/ModalAddMembers";
-import { ModalEditMembers } from "@/components/layouts/modals/ModalEditMembers";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useCallback, useEffect, useState } from 'react';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddMember } from '@/components/layouts/modals/ModalAddMembers';
+import { ModalEditMembers } from '@/components/layouts/modals/ModalEditMembers';
 import {
   ICreateUserBody,
   deleteUser,
   editUser,
   fetchAllUsers,
   addUser,
-} from "@/api/user";
-import { handleToast } from "@/utils/handleToast";
+} from '@/api/user';
+import { handleToast } from '@/utils/handleToast';
+import { IEditMember, IUserData } from '@/@types/user';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState([]);
   const [modalAddMemberIsOpen, setModalAddMemberIsOpen] = useState(false);
   const [modalEditMemberIsOpen, setModalEditMemberIsOpen] = useState(false);
-  const [currentMember, setCurrentMember] = useState({});
+  const [currentMember, setCurrentMember] = useState<IUserData>(
+    {} as IUserData
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   const handleAddMember = async ({
@@ -31,36 +34,49 @@ export const MembersTemplate = () => {
   }: ICreateUserBody) => {
     setIsLoading(true);
     try {
-      const response = await addUser({ name, password, role, email });
-      console.log(response);
+      await addUser({ name, password, role, email });
+      handleToast('Membro adicionado com sucesso.', 'success');
+      setModalAddMemberIsOpen(false);
     } catch (err) {
-      handleToast("Erro ao adicionar membro", "error");
-      console.log(err);
+      if (err.response.data.err) {
+        handleToast(err.response.data.err, 'error');
+        return;
+      }
+      handleToast('Erro ao adicionar membro.', 'error');
     } finally {
       setIsLoading(false);
-      setModalAddMemberIsOpen(false);
-      handleToast("Membro adicionado com sucesso.", "success");
       handleFetchMembers();
     }
   };
 
-  const handleEditMember = async (memberId: string) => {
-    const item = members.find((member) => member.id == memberId);
+  const handleOpenModalEditMember = async (userId: string) => {
+    const item = members.find((member) => member.id == userId);
+    setCurrentMember(item);
+    setModalEditMemberIsOpen(true);
+  };
+
+  const handleEditMember = async (values: IEditMember) => {
+    setIsLoading(true);
     try {
-      await editUser(memberId);
-      setCurrentMember(item);
-      setModalEditMemberIsOpen(true);
+      await editUser(values, currentMember.id);
+      await handleFetchMembers();
+      handleToast('Membro editado com sucesso.', 'success');
     } catch (err) {
-      console.log(err);
+      if (err.response.data.err) {
+        handleToast(err.response.data.err, 'error');
+        return;
+      }
+      handleToast('Erro ao editar membro.', 'error');
     } finally {
       setIsLoading(false);
+      setModalEditMemberIsOpen(false);
     }
   };
 
   const handleFetchMembers = useCallback(async () => {
     try {
       const response = await fetchAllUsers();
-      setMembers(response.members);
+      setMembers(response.users);
     } catch (err) {
       console.log(err);
     } finally {
@@ -72,16 +88,16 @@ export const MembersTemplate = () => {
     handleFetchMembers();
   }, []);
 
-  const handleDeleteItem = async (userID: string) => {
+  const handleDeleteItem = async (userId: string) => {
     setIsLoading(true);
     try {
-      await deleteUser(userID);
+      await deleteUser(userId);
+      handleToast('Membro deletado com sucesso.', 'success');
     } catch (err) {
-      console.log(err);
+      handleToast('Algo aconteceu de errado.', 'error');
     } finally {
       handleFetchMembers();
       setIsLoading(false);
-      handleToast("Membro deletado com sucesso.", "success");
     }
   };
 
@@ -104,7 +120,7 @@ export const MembersTemplate = () => {
           </div>
           <Table
             content={members}
-            handleEditItem={handleEditMember}
+            handleEditItem={handleOpenModalEditMember}
             tableTitle="membros"
             handleDeleteItem={handleDeleteItem}
             isLoading={isLoading}
@@ -120,6 +136,7 @@ export const MembersTemplate = () => {
         modalIsOpen={modalEditMemberIsOpen}
         setModalIsOpen={setModalEditMemberIsOpen}
         currentMember={currentMember}
+        handleEditMember={handleEditMember}
       />
     </>
   );
