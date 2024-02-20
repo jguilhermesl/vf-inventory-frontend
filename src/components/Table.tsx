@@ -17,6 +17,7 @@ import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
 import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
 import { Spinner } from './Spinner';
 import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { Button } from './Button';
 
 interface ITableProps {
   content: any[];
@@ -42,7 +43,7 @@ export const Table = ({
   disableAccessItem,
   disableDeleteItem,
   disableEditItem,
-  emptyMessage,
+  emptyMessage = 'Não foi encontrado nenhum dado.',
   disableActions,
   tableTitle,
   isLoading,
@@ -202,7 +203,7 @@ export const Table = ({
             </>
           )
         ) : (
-          <div className="flex items-center justify-center flex-col  py-4">
+          <div className="flex flex-col mt-12">
             <Paragraph size={ParagraphSizeVariant.ExtraLarge}>
               {emptyMessage}
             </Paragraph>
