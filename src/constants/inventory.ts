@@ -63,34 +63,41 @@ export const MOCK_INVENTORY = [
 
 export const MOCK_OPTIONS_ACTIONS_TYPE = [
   {
-    label: 'Entrada',
-    value: 'entrada',
+    label: "Entrada",
+    value: "entrada",
   },
   {
-    label: 'Saída',
-    value: 'saida',
+    label: "Saída",
+    value: "saida",
+  },
+];
+export const MOCK_OPTIONS_ROLE_MEMBER = [
+  { label: "Admin", value: "admin" },
+  {
+    label: "Member",
+    value: "member",
   },
 ];
 
 export const MOCK_OPTIONS_PAYMENTS_TYPE = [
   {
-    label: 'Pix',
-    value: 'pix',
+    label: "Pix",
+    value: "pix",
   },
   {
-    label: 'Cartão de Crédito',
-    value: 'credit-card',
+    label: "Cartão de Crédito",
+    value: "credit-card",
   },
   {
-    label: 'Cartão de Débito',
-    value: 'debit-card',
+    label: "Cartão de Débito",
+    value: "debit-card",
   },
   {
-    label: 'Prazo',
-    value: 'prazo',
+    label: "Prazo",
+    value: "prazo",
   },
   {
-    label: 'Dinheiro',
-    value: 'money',
+    label: "Dinheiro",
+    value: "money",
   },
 ];

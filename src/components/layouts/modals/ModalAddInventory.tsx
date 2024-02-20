@@ -1,16 +1,16 @@
-import { Button, ButtonVariant } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { addInventorySchema } from '@/validation/inventory';
-import { useFormik } from 'formik';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { AutoCompleteInput } from '@/components/AutoCompleteInput';
-import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
-import { convertFormatValidity } from '@/utils/convertFormatValidity';
-import { fetchProducts } from '@/api/products';
-import { IAddInventoryBody } from '@/@types/inventory';
+import { Button, ButtonVariant } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { addInventorySchema } from "@/validation/inventory";
+import { useFormik } from "formik";
+import { CheckCircle, XCircle } from "phosphor-react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { AutoCompleteInput } from "@/components/AutoCompleteInput";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertFormatValidity } from "@/utils/convertFormatValidity";
+import { fetchProducts } from "@/api/products";
+import { IAddInventoryBody } from "@/@types/inventory";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -46,9 +46,9 @@ export const ModalAddInventory = ({
     initialValues: {
       quantity: 0,
       price: 0,
-      validity: '',
-      lot: '',
-      productId: '',
+      validity: "",
+      lot: "",
+      productId: "",
     },
     validationSchema: addInventorySchema,
     onSubmit: handleAddInventory,
@@ -72,7 +72,7 @@ export const ModalAddInventory = ({
             <label>Produto</label>
             <AutoCompleteInput
               setItem={(productId: string) =>
-                formik.setFieldValue('productId', productId)
+                formik.setFieldValue("productId", productId)
               }
               getItems={handleGetProductsSuggestions}
               suggestions={suggestions}
@@ -80,33 +80,34 @@ export const ModalAddInventory = ({
             <Input
               label="Lote"
               error={formik.errors?.lot as string}
-              {...formik.getFieldProps('lot')}
+              {...formik.getFieldProps("lot")}
+              placeholder="Digite o lote"
             />
             <Input
               type="number"
               label="Quantidade"
               error={formik.errors?.quantity as string}
-              {...formik.getFieldProps('quantity')}
+              {...formik.getFieldProps("quantity")}
               placeholder="Digite a quantidade"
             />
             <Input
               label="Preço"
               error={formik.errors?.price as string}
-              {...formik.getFieldProps('price')}
+              {...formik.getFieldProps("price")}
               placeholder="R$"
               onChange={(e) => {
                 const formattedValue = convertRealToQuantity(e.target.value);
-                formik.setFieldValue('price', formattedValue);
+                formik.setFieldValue("price", formattedValue);
               }}
             />
             <Input
               label="Validade"
               error={formik.errors?.validity as string}
-              {...formik.getFieldProps('validity')}
-              placeholder="DD.MM.AAAA"
+              {...formik.getFieldProps("validity")}
+              placeholder="Digite uma validade"
               onChange={(e) => {
                 const formattedValue = convertFormatValidity(e.target.value);
-                formik.setFieldValue('validity', formattedValue);
+                formik.setFieldValue("validity", formattedValue);
               }}
             />
             <Button

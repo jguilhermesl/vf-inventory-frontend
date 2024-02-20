@@ -1,11 +1,11 @@
-import clsx from 'clsx';
-import { HTMLAttributes, ReactNode } from 'react';
+import clsx from "clsx";
+import { HTMLAttributes, ReactNode } from "react";
 
 export enum ParagraphSizeVariant {
-  Small = 'small',
-  Medium = 'medium',
-  Large = 'large',
-  ExtraLarge = 'extra-large',
+  Small = "small",
+  Medium = "medium",
+  Large = "large",
+  ExtraLarge = "extra-large",
 }
 
 interface ParagraphProps extends HTMLAttributes<HTMLSpanElement> {
@@ -25,10 +25,10 @@ export const Paragraph = ({
   ...props
 }: ParagraphProps) => {
   const ParagraphClassesSize = {
-    [ParagraphSizeVariant.Small]: 'text-xs',
-    [ParagraphSizeVariant.Medium]: 'text-sm',
-    [ParagraphSizeVariant.Large]: 'text-base',
-    [ParagraphSizeVariant.ExtraLarge]: 'text-xl',
+    [ParagraphSizeVariant.Small]: "text-xs",
+    [ParagraphSizeVariant.Medium]: "text-sm",
+    [ParagraphSizeVariant.Large]: "text-base",
+    [ParagraphSizeVariant.ExtraLarge]: "text-xl",
   };
 
   return (
@@ -36,9 +36,9 @@ export const Paragraph = ({
       className={clsx(
         ParagraphClassesSize[size],
         {
-          'text-dark-primary': !disabled && !hasError,
-          'text-dark-grey': disabled,
-          'text-red-800': hasError,
+          "text-dark-primary": !disabled && !hasError,
+          "text-dark-grey": disabled,
+          "text-red-800": hasError,
         },
         className
       )}
