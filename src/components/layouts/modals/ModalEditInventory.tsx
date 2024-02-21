@@ -74,11 +74,13 @@ export const ModalEditInventory = ({
               }}
             />
             <Input
+              type="number"
               label="Quantidade"
               error={formik.errors?.lot as string}
               {...formik.getFieldProps('quantity')}
             />
             <Input
+              type="number"
               label="Preço"
               error={formik.errors?.lot as string}
               {...formik.getFieldProps('price')}
@@ -87,6 +89,8 @@ export const ModalEditInventory = ({
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
+              disabled={formik.isSubmitting || !formik.isValid}
+              isLoading={formik.isSubmitting}
             >
               Salvar Estoque
             </Button>

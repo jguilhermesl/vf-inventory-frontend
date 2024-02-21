@@ -81,6 +81,7 @@ export const ModalAddInventory = ({
               label="Lote"
               error={formik.errors?.lot as string}
               {...formik.getFieldProps('lot')}
+              placeholder="Digite o lote"
             />
             <Input
               type="number"
@@ -103,7 +104,7 @@ export const ModalAddInventory = ({
               label="Validade"
               error={formik.errors?.validity as string}
               {...formik.getFieldProps('validity')}
-              placeholder="DD.MM.AAAA"
+              placeholder="Digite uma validade"
               onChange={(e) => {
                 const formattedValue = convertFormatValidity(e.target.value);
                 formik.setFieldValue('validity', formattedValue);
@@ -112,6 +113,8 @@ export const ModalAddInventory = ({
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
+              disabled={formik.isSubmitting || !formik.isValid}
+              isLoading={formik.isSubmitting}
             >
               Adicionar Estoque
             </Button>

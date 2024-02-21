@@ -21,6 +21,10 @@ import {
   IInventoryModel,
 } from '@/@types/inventory';
 
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { formatDDMMYYYYToDate } from '@/utils/formatDDMMYYYYToDate';
+
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState([]);
   const [modalAddInventoryIsOpen, setModalAddInventoryIsOpen] = useState(false);
@@ -31,9 +35,10 @@ export const InventoryTemplate = () => {
     {} as IInventoryModel
   );
 
-  const handleFetchInventory = useCallback(async () => {
+  const handleFetchInventory = useCallback(async (search?: string) => {
+    setIsLoading(true);
     try {
-      const response = await fetchInventory();
+      const response = await fetchInventory(search ?? '');
       setInventory(response.inventory);
     } catch (err) {
       console.log(err);
@@ -51,7 +56,14 @@ export const InventoryTemplate = () => {
   const handleEditInventory = async (values: IEditInventoryBody) => {
     setIsLoading(true);
     try {
-      await editInventory(values, currentInventory.id);
+      console.log('==> ', formatDDMMYYYYToDate(values.validity).toString());
+      await editInventory(
+        {
+          ...values,
+          validity: formatDDMMYYYYToDate(values.validity).toString(),
+        },
+        currentInventory.id
+      );
       await handleFetchInventory();
       handleToast('Estoque editado com sucesso.', 'success');
     } catch (err) {
@@ -77,10 +89,10 @@ export const InventoryTemplate = () => {
     try {
       await addInventory({
         lot,
-        price: formatCurrencyToFloat(price),
+        price: formatCurrencyToFloat(convertRealToQuantity(price)),
         productId,
         quantity,
-        validity,
+        validity: formatDateToDDMMYYYY(validity),
       });
       handleToast('Estoque adicionado com sucesso.', 'success');
       setModalAddInventoryIsOpen(false);
@@ -132,6 +144,7 @@ export const InventoryTemplate = () => {
             tableTitle="Estoque"
             handleDeleteItem={handleDeleteItem}
             isLoading={isLoading}
+            handleGetItemsWithSearch={handleFetchInventory}
           />
         </div>
       </LayoutWithSidebar>

@@ -1,16 +1,31 @@
-import { Heading } from "@/components/Heading";
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Paragraph } from "@/components/Paragraph";
-import { Table } from "@/components/Table";
-import { MOCK_HISTORY } from "@/constants/history";
-import { useState } from "react";
+import { fetchHistory } from '@/api/history';
+import { Heading } from '@/components/Heading';
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Paragraph } from '@/components/Paragraph';
+import { Table } from '@/components/Table';
+import { MOCK_HISTORY } from '@/constants/history';
+import { handleToast } from '@/utils/handleToast';
+import { useCallback, useEffect, useState } from 'react';
 
 export const HistoryTemplate = () => {
   const [history, setHistory] = useState(MOCK_HISTORY);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleEditItem = (productId: string) => {
-    const item = history.find((product) => product.id == productId);
-  };
+  const handleFetchHistory = useCallback(async (search?: string) => {
+    setIsLoading(true);
+    try {
+      const { history: data } = await fetchHistory(search ?? '');
+      setHistory(data);
+    } catch (err) {
+      handleToast('Algo deu errado.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleFetchHistory();
+  }, [handleFetchHistory]);
 
   return (
     <>
@@ -24,9 +39,10 @@ export const HistoryTemplate = () => {
           </div>
           <Table
             content={history}
-            handleEditItem={handleEditItem}
             disableActions
             tableTitle="Historico"
+            isLoading={isLoading}
+            handleGetItemsWithSearch={handleFetchHistory}
           />
         </div>
       </LayoutWithSidebar>

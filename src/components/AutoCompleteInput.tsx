@@ -19,6 +19,8 @@ interface IAutoCompleteInputProps {
   setItem: Dispatch<SetStateAction<string>>;
   suggestions: any[];
   getItems: (value: string) => Promise<void>;
+  value?: string;
+  setValue?: Dispatch<SetStateAction<string>>;
 }
 
 const AutoCompleteItem = memo(
@@ -71,9 +73,11 @@ export const AutoCompleteInput = ({
   setItem,
   suggestions,
   getItems,
+  value,
+  setValue,
 }: IAutoCompleteInputProps) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
-  const [value, setValue] = useState('');
+  const [autoCompleteValue, setAutoCompleteValue] = useState('');
 
   const handleClickProduct = (itemId: string) => {
     const itemFiltered = suggestions.find((p) => p.id == itemId);
@@ -97,14 +101,16 @@ export const AutoCompleteInput = ({
           : ''
       }`;
 
-    setValue(formattedString);
+    setAutoCompleteValue(formattedString);
+    setValue && setValue(formattedString);
     setItem(itemFiltered.id);
     setOpenSuggestions(false);
   };
 
   const handleChange = (e) => {
     getItems(e.target.value);
-    setValue(e.target.value);
+    setAutoCompleteValue(e.target.value);
+    setValue && setValue(e.target.value);
     setOpenSuggestions(true);
   };
 
@@ -113,10 +119,10 @@ export const AutoCompleteInput = ({
       <Input
         name="autocomplete"
         className="py-3 w-full border-neutral-light-grey"
-        placeholder="Digite o código ou lote do estoque"
+        placeholder="Digite o nome do produto ou sigla"
         iconRight={<MagnifyingGlass size={20} />}
         onChange={handleChange}
-        value={value}
+        value={value ?? autoCompleteValue}
       />
 
       <AutoCompleteItem

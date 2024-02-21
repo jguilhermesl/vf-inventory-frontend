@@ -77,9 +77,10 @@ export const ProductsTemplate = () => {
     }
   };
 
-  const handleFetchProducts = useCallback(async () => {
+  const handleFetchProducts = useCallback(async (search?: string) => {
+    setIsLoading(true);
     try {
-      const response = await fetchProducts();
+      const response = await fetchProducts(search ?? '');
       setProducts(response.products);
     } catch (err) {
       console.log(err);
@@ -115,6 +116,7 @@ export const ProductsTemplate = () => {
             handleDeleteItem={handleDeleteItem}
             tableTitle="Produtos"
             isLoading={isLoading}
+            handleGetItemsWithSearch={handleFetchProducts}
           />
         </div>
       </LayoutWithSidebar>

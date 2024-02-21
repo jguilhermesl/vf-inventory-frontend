@@ -77,6 +77,8 @@ export const ModalEditMembers = ({
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
+              disabled={formik.isSubmitting || !formik.isValid}
+              isLoading={formik.isSubmitting}
             >
               Salvar Membro
             </Button>
