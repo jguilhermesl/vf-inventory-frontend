@@ -1,32 +1,32 @@
-import React from "react";
-import "jspdf-autotable";
+import React, { useCallback, useEffect, useState } from 'react';
+import 'jspdf-autotable';
 import {
   FileCsv,
   FilePdf,
   MagnifyingGlass,
   PencilLine,
   Trash,
-} from "phosphor-react";
-import { Line } from "./Line";
-import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
-import { ReactNode } from "react";
-import { Input } from "./Input";
-import clsx from "clsx";
-import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
-import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
-import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
-import { Spinner } from "./Spinner";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
-import { Button } from "./Button";
-import { convertFormatValidity } from "@/utils/convertFormatValidity";
+} from 'phosphor-react';
+import { Line } from './Line';
+import { Paragraph, ParagraphSizeVariant } from './Paragraph';
+import { ReactNode } from 'react';
+import { Input } from './Input';
+import clsx from 'clsx';
+import { convertCamelCaseToWordsAndTranslate } from '@/utils/convertCamelCaseToWords';
+import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
+import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
+import { Spinner } from './Spinner';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { Button } from './Button';
+import { convertFormatValidity } from '@/utils/convertFormatValidity';
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
+import { useDebounce } from '@/hooks/useDebouce';
 
 interface ITableProps {
   content: any[];
   showIdColumn?: false;
   handleDeleteItem?: (id: string) => void;
   handleEditItem?: (id: string) => void;
-  handleAccessItem?: (id: string) => void;
-  disableAccessItem?: boolean;
   disableDeleteItem?: boolean;
   disableEditItem?: boolean;
   emptyMessage?: string;
@@ -34,23 +34,26 @@ interface ITableProps {
   headerComponent?: ReactNode;
   disableActions?: boolean;
   isLoading?: boolean;
+  handleGetItemsWithSearch?: (search: string) => Promise<void>;
 }
 
 export const Table = ({
   content,
-  handleAccessItem,
   handleDeleteItem,
   handleEditItem,
-  disableAccessItem,
   disableDeleteItem,
   disableEditItem,
-  emptyMessage = "Não foi encontrado nenhum dado.",
+  emptyMessage = 'Não foi encontrado nenhum dado.',
   disableActions,
   tableTitle,
   isLoading,
+  handleGetItemsWithSearch = async () => {},
 }: ITableProps) => {
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 1000);
+
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != "id")
+    ? Object.keys(content[0]).filter((item) => item != 'id')
     : [];
 
   const columnsQuantity = titles.length;
@@ -60,25 +63,13 @@ export const Table = ({
     return `${widthSize}%`;
   };
 
-  console.log(titles);
+  const handleSearch = async () => {
+    await handleGetItemsWithSearch(debouncedSearch as string);
+  };
 
-  // const getContentTable = (title, item, index) => {
-  //   console.log("index", index);
-  //   console.log("item", item[index]);
-  //   if (item === "price") {
-  //     console.log("entrou no price");
-  //     return (
-  //       <Paragraph className="text-white font-bold flex mx-auto">
-  //         R$ {convertRealToQuantity(item[index].toString())}
-  //       </Paragraph>
-  //     );
-  //   }
-  //   return (
-  //     <Paragraph className="text-white font-bold flex mx-auto">
-  //       {item[index]}
-  //     </Paragraph>
-  //   );
-  // };
+  useEffect(() => {
+    handleSearch();
+  }, [debouncedSearch]);
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
@@ -88,6 +79,8 @@ export const Table = ({
             placeholder="Procure por algum item"
             iconLeft={<MagnifyingGlass size={16} />}
             className="!w-[250px]"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <div className="flex items-center gap-4">
             <button className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center">
@@ -106,12 +99,8 @@ export const Table = ({
             </button>
           </div>
         </header>
-        {titles.length ? (
-          isLoading ? (
-            <div className="w-full items-center justify-center flex flex-col mt-5">
-              <Spinner />
-            </div>
-          ) : (
+        {!isLoading ? (
+          titles.length ? (
             <>
               <table
                 className="flex flex-col "
@@ -131,7 +120,7 @@ export const Table = ({
                           style={{ width: calculateWidthSize() }}
                         >
                           <Paragraph className="!font-bold !text-base">
-                            {convertCamelCaseToWords(title)}
+                            {convertCamelCaseToWordsAndTranslate(title)}
                           </Paragraph>
                         </th>
                       );
@@ -150,32 +139,30 @@ export const Table = ({
                       key={item.id}
                       className="w-full flex hover:bg-background  py-4 border-b border-b-[#00000010]"
                     >
-                      {titles.map((title, index) => (
+                      {titles.map((title) => (
                         <td
                           className={`flex min-w-[180px]`}
                           style={{ width: calculateWidthSize() }}
                         >
-                          {/* {getContentTable(title, item, index)} */}
                           {(() => {
-                            console.log(title);
                             switch (title) {
-                              case "Modalidade":
+                              case 'type':
                                 return (
                                   <Paragraph
                                     className={clsx(
-                                      "flex items-center rounded text-center w-[80px] py-2",
+                                      'flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1',
                                       {
-                                        "bg-red-400": item[title] === "Saida",
-                                        "bg-green-400":
-                                          item[title] === "Entrada",
+                                        'bg-red-400': item[title] === 'output',
+                                        'bg-green-400': item[title] === 'input',
                                       }
                                     )}
                                   >
-                                    {item[title]}
+                                    {item[title] === 'output' && 'Saída'}
+                                    {item[title] === 'input' && 'Entrada'}
                                   </Paragraph>
                                 );
 
-                              case "price":
+                              case 'price':
                                 const priceValue = parseFloat(item[title]);
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
@@ -186,19 +173,10 @@ export const Table = ({
                                   </Paragraph>
                                 );
 
-                              case "validity":
+                              case 'validity' || 'createdAt':
                                 const originalValidity = item[title];
-                                const dateObject = new Date(originalValidity);
-                                const day = dateObject
-                                  .getUTCDate()
-                                  .toString()
-                                  .padStart(2, "0");
-                                const month = (dateObject.getUTCMonth() + 1)
-                                  .toString()
-                                  .padStart(2, "0");
-                                const year = dateObject.getUTCFullYear();
-
-                                const formattedValidity = `${day}/${month}/${year}`;
+                                const formattedValidity =
+                                  formatDateToDDMMYYYY(originalValidity);
                                 return (
                                   <Paragraph>{formattedValidity}</Paragraph>
                                 );
@@ -206,7 +184,7 @@ export const Table = ({
                               default:
                                 return (
                                   <Paragraph className="!text-base">
-                                    {item[title]}
+                                    {item[title] ?? '-'}
                                   </Paragraph>
                                 );
                             }
@@ -253,12 +231,16 @@ export const Table = ({
                 </Paragraph>
               </div>
             </>
+          ) : (
+            <div className="flex flex-col mt-12">
+              <Paragraph size={ParagraphSizeVariant.ExtraLarge}>
+                {emptyMessage}
+              </Paragraph>
+            </div>
           )
         ) : (
-          <div className="flex flex-col mt-12">
-            <Paragraph size={ParagraphSizeVariant.ExtraLarge}>
-              {emptyMessage}
-            </Paragraph>
+          <div className="w-full items-center justify-center flex flex-col mt-5">
+            <Spinner />
           </div>
         )}
       </div>

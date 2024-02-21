@@ -1,8 +1,12 @@
-import { IAddInventoryBody, IEditInventoryBody } from "@/@types/inventory";
+import { IActionInventoryBody, IAddInventoryBody, IEditInventoryBody } from "@/@types/inventory";
 import api from "./axios";
 
-export const fetchInventory = async () => {
-  const response = await api.get("/inventory");
+export const fetchInventory = async (search?: string) => {
+  const response = await api.get("/inventory", {
+    params: {
+      search
+    }
+  });
   return response.data;
 };
 
@@ -18,5 +22,10 @@ export const addInventory = async (data: IAddInventoryBody) => {
 
 export const editInventory = async (data: IEditInventoryBody, inventoryId: string) => {
   const response = await api.put("/inventory/" + inventoryId, data);
+  return response.data;
+};
+
+export const actionInventory = async (data: IActionInventoryBody, inventoryId: string) => {
+  const response = await api.post("/inventory/action/" + inventoryId, data);
   return response.data;
 };

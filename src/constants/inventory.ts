@@ -64,11 +64,11 @@ export const MOCK_INVENTORY = [
 export const MOCK_OPTIONS_ACTIONS_TYPE = [
   {
     label: "Entrada",
-    value: "entrada",
+    value: "input",
   },
   {
     label: "Saída",
-    value: "saida",
+    value: "output",
   },
 ];
 export const MOCK_OPTIONS_ROLE_MEMBER = [

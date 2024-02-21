@@ -73,9 +73,10 @@ export const MembersTemplate = () => {
     }
   };
 
-  const handleFetchMembers = useCallback(async () => {
+  const handleFetchMembers = useCallback(async (search?: string) => {
+    setIsLoading(true);
     try {
-      const response = await fetchAllUsers();
+      const response = await fetchAllUsers(search ?? '');
       setMembers(response.users);
     } catch (err) {
       console.log(err);
@@ -124,6 +125,7 @@ export const MembersTemplate = () => {
             tableTitle="membros"
             handleDeleteItem={handleDeleteItem}
             isLoading={isLoading}
+            handleGetItemsWithSearch={handleFetchMembers}
           />
         </div>
       </LayoutWithSidebar>

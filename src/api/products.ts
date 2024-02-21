@@ -6,8 +6,12 @@ export interface IAddProductBody {
   name: string;
 }
 
-export const fetchProducts = async () => {
-  const response = await api.get("/products");
+export const fetchProducts = async (search?: string) => {
+  const response = await api.get("/products", {
+    params: {
+      search
+    }
+  });
   return response.data;
 };
 

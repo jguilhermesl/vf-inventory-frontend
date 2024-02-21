@@ -22,3 +22,10 @@ export interface IEditInventoryBody {
   quantity: number,
   validity: string
 }
+
+export interface IActionInventoryBody {
+  customerPaymentType: string,
+  customerName: string,
+  quantity: number,
+  type: "input" | "output"
+}
