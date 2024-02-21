@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { ButtonHTMLAttributes } from 'react';
+import { Spinner } from './Spinner';
 
 export enum ButtonVariant {
   Primary = 'primary',
@@ -20,6 +21,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconSize?: number;
   variant?: ButtonVariant;
   size?: ButtonSizeVariant;
+  isLoading?: boolean;
 }
 
 export const Button = ({
@@ -31,10 +33,11 @@ export const Button = ({
   size = ButtonSizeVariant.Auto,
   className,
   disabled,
+  isLoading = false,
   ...props
 }: ButtonProps) => {
   const buttonClassesVariant = {
-    [ButtonVariant.Primary]: 'bg-primary disabled:bg-black-50 text-white',
+    [ButtonVariant.Primary]: 'bg-primary disabled:bg-dark-grey text-white',
     [ButtonVariant.Secondary]:
       'border-2 border-primary disabled:bg-black-50 text-primary',
     [ButtonVariant.iconOnly]: 'disabled:opacity-40 !w-content py-0',
@@ -58,11 +61,11 @@ export const Button = ({
       disabled={disabled}
       {...props}
     >
-      {leftIcon}
+      {leftIcon && !isLoading}
 
-      {children}
+      {isLoading ? <Spinner /> : children}
 
-      {rightIcon}
+      {rightIcon && !isLoading}
     </button>
   );
 };

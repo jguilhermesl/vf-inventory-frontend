@@ -1,28 +1,29 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useCallback, useEffect, useState } from "react";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddInventory } from "../../components/layouts/modals/ModalAddInventory";
-import { ModalEditInventory } from "@/components/layouts/modals/ModalEditInventory";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useCallback, useEffect, useState } from 'react';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddInventory } from '../../components/layouts/modals/ModalAddInventory';
+import { ModalEditInventory } from '@/components/layouts/modals/ModalEditInventory';
 import {
   addInventory,
   deleteInventory,
   fetchInventory,
   editInventory,
-} from "@/api/inventory";
-import { handleToast } from "@/utils/handleToast";
-import { formatCurrencyToFloat } from "@/utils/formatCurrencyToFloat";
+} from '@/api/inventory';
+import { handleToast } from '@/utils/handleToast';
+import { formatCurrencyToFloat } from '@/utils/formatCurrencyToFloat';
 import {
   IAddInventoryBody,
   IEditInventoryBody,
   IInventoryModel,
-} from "@/@types/inventory";
+} from '@/@types/inventory';
 
-import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { formatDDMMYYYYToDate } from '@/utils/formatDDMMYYYYToDate';
 
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState([]);
@@ -34,9 +35,10 @@ export const InventoryTemplate = () => {
     {} as IInventoryModel
   );
 
-  const handleFetchInventory = useCallback(async () => {
+  const handleFetchInventory = useCallback(async (search?: string) => {
+    setIsLoading(true);
     try {
-      const response = await fetchInventory();
+      const response = await fetchInventory(search ?? '');
       setInventory(response.inventory);
     } catch (err) {
       console.log(err);
@@ -54,15 +56,22 @@ export const InventoryTemplate = () => {
   const handleEditInventory = async (values: IEditInventoryBody) => {
     setIsLoading(true);
     try {
-      await editInventory(values, currentInventory.id);
+      console.log('==> ', formatDDMMYYYYToDate(values.validity).toString());
+      await editInventory(
+        {
+          ...values,
+          validity: formatDDMMYYYYToDate(values.validity).toString(),
+        },
+        currentInventory.id
+      );
       await handleFetchInventory();
-      handleToast("Estoque editado com sucesso.", "success");
+      handleToast('Estoque editado com sucesso.', 'success');
     } catch (err) {
       if (err.response.data.err) {
-        handleToast(err.response.data.err, "error");
+        handleToast(err.response.data.err, 'error');
         return;
       }
-      handleToast("Erro ao editar membro.", "error");
+      handleToast('Erro ao editar membro.', 'error');
     } finally {
       setIsLoading(false);
       setModalEditInventoryIsOpen(false);
@@ -85,11 +94,11 @@ export const InventoryTemplate = () => {
         quantity,
         validity: formatDateToDDMMYYYY(validity),
       });
-      handleToast("Estoque adicionado com sucesso.", "success");
+      handleToast('Estoque adicionado com sucesso.', 'success');
       setModalAddInventoryIsOpen(false);
       handleFetchInventory();
     } catch (err) {
-      handleToast("Algo aconteceu de errado.", "error");
+      handleToast('Algo aconteceu de errado.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +113,7 @@ export const InventoryTemplate = () => {
     } finally {
       handleFetchInventory();
       setIsLoading(false);
-      handleToast("Estoque deletado com sucesso.", "success");
+      handleToast('Estoque deletado com sucesso.', 'success');
     }
   };
 
@@ -135,6 +144,7 @@ export const InventoryTemplate = () => {
             tableTitle="Estoque"
             handleDeleteItem={handleDeleteItem}
             isLoading={isLoading}
+            handleGetItemsWithSearch={handleFetchInventory}
           />
         </div>
       </LayoutWithSidebar>

@@ -63,8 +63,9 @@ export const ModalAddProduct = ({
               disabled={isLoading}
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
+              isLoading={formik.isSubmitting}
             >
-              {isLoading ? <Spinner /> : 'Adicionar produto'}
+              Adicionar produto
             </Button>
           </form>
         </div>

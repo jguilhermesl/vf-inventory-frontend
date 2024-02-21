@@ -1,12 +1,12 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { Input } from "@/components/Input";
-import { MagnifyingGlass } from "phosphor-react";
-import { memo } from "react";
-import clsx from "clsx";
-import { Spinner } from "./Spinner";
-import { Line } from "./Line";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
-import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
+import { Dispatch, SetStateAction, useState } from 'react';
+import { Input } from '@/components/Input';
+import { MagnifyingGlass } from 'phosphor-react';
+import { memo } from 'react';
+import clsx from 'clsx';
+import { Spinner } from './Spinner';
+import { Line } from './Line';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
 
 interface IAutoCompleteItemProps {
   suggestions: any[];
@@ -19,6 +19,8 @@ interface IAutoCompleteInputProps {
   setItem: Dispatch<SetStateAction<string>>;
   suggestions: any[];
   getItems: (value: string) => Promise<void>;
+  value?: string;
+  setValue?: Dispatch<SetStateAction<string>>;
 }
 
 const AutoCompleteItem = memo(
@@ -31,10 +33,10 @@ const AutoCompleteItem = memo(
     return (
       <div
         className={clsx(
-          "bg-white max-h-[200px] w-[400px] overflow-auto rounded transition-all",
+          'bg-white max-h-[200px] w-[400px] overflow-auto rounded transition-all',
           {
-            "h-0": !isOpenSuggestions,
-            "border border-neutral-grey": isOpenSuggestions,
+            'h-0': !isOpenSuggestions,
+            'border border-neutral-grey': isOpenSuggestions,
           }
         )}
       >
@@ -71,40 +73,44 @@ export const AutoCompleteInput = ({
   setItem,
   suggestions,
   getItems,
+  value,
+  setValue,
 }: IAutoCompleteInputProps) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
-  const [value, setValue] = useState("");
+  const [autoCompleteValue, setAutoCompleteValue] = useState('');
 
   const handleClickProduct = (itemId: string) => {
     const itemFiltered = suggestions.find((p) => p.id == itemId);
     const formattedString =
-      `${itemFiltered?.name ? `${itemFiltered.name} | ` : ""}` +
-      `${itemFiltered?.sigla ? `${itemFiltered.sigla} ` : ""}` +
-      `${itemFiltered?.lot ? `${itemFiltered.lot} | ` : ""}` +
+      `${itemFiltered?.name ? `${itemFiltered.name} | ` : ''}` +
+      `${itemFiltered?.sigla ? `${itemFiltered.sigla} ` : ''}` +
+      `${itemFiltered?.lot ? `${itemFiltered.lot} | ` : ''}` +
       `${
         itemFiltered?.product || itemFiltered?.productName
           ? `${itemFiltered?.product || itemFiltered?.productName} | `
-          : ""
+          : ''
       }` +
       `${
         itemFiltered?.price
           ? `${convertRealToQuantity(itemFiltered?.price?.toString())} | `
-          : ""
+          : ''
       }` +
       `${
         itemFiltered?.validity
           ? formatDateToDDMMYYYY(itemFiltered?.validity)
-          : ""
+          : ''
       }`;
 
-    setValue(formattedString);
+    setAutoCompleteValue(formattedString);
+    setValue && setValue(formattedString);
     setItem(itemFiltered.id);
     setOpenSuggestions(false);
   };
 
   const handleChange = (e) => {
     getItems(e.target.value);
-    setValue(e.target.value);
+    setAutoCompleteValue(e.target.value);
+    setValue && setValue(e.target.value);
     setOpenSuggestions(true);
   };
 
@@ -116,7 +122,7 @@ export const AutoCompleteInput = ({
         placeholder="Digite o nome do produto ou sigla"
         iconRight={<MagnifyingGlass size={20} />}
         onChange={handleChange}
-        value={value}
+        value={value ?? autoCompleteValue}
       />
 
       <AutoCompleteItem
