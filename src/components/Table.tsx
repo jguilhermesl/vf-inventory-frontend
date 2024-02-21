@@ -1,23 +1,24 @@
-import React from 'react';
-import 'jspdf-autotable';
+import React from "react";
+import "jspdf-autotable";
 import {
   FileCsv,
   FilePdf,
   MagnifyingGlass,
   PencilLine,
   Trash,
-} from 'phosphor-react';
-import { Line } from './Line';
-import { Paragraph, ParagraphSizeVariant } from './Paragraph';
-import { ReactNode } from 'react';
-import { Input } from './Input';
-import clsx from 'clsx';
-import { convertCamelCaseToWords } from '@/utils/convertCamelCaseToWords';
-import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
-import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
-import { Spinner } from './Spinner';
-import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
-import { Button } from './Button';
+} from "phosphor-react";
+import { Line } from "./Line";
+import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
+import { ReactNode } from "react";
+import { Input } from "./Input";
+import clsx from "clsx";
+import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
+import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
+import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
+import { Spinner } from "./Spinner";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { Button } from "./Button";
+import { convertFormatValidity } from "@/utils/convertFormatValidity";
 
 interface ITableProps {
   content: any[];
@@ -43,13 +44,13 @@ export const Table = ({
   disableAccessItem,
   disableDeleteItem,
   disableEditItem,
-  emptyMessage = 'Não foi encontrado nenhum dado.',
+  emptyMessage = "Não foi encontrado nenhum dado.",
   disableActions,
   tableTitle,
   isLoading,
 }: ITableProps) => {
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != 'id')
+    ? Object.keys(content[0]).filter((item) => item != "id")
     : [];
 
   const columnsQuantity = titles.length;
@@ -60,6 +61,24 @@ export const Table = ({
   };
 
   console.log(titles);
+
+  // const getContentTable = (title, item, index) => {
+  //   console.log("index", index);
+  //   console.log("item", item[index]);
+  //   if (item === "price") {
+  //     console.log("entrou no price");
+  //     return (
+  //       <Paragraph className="text-white font-bold flex mx-auto">
+  //         R$ {convertRealToQuantity(item[index].toString())}
+  //       </Paragraph>
+  //     );
+  //   }
+  //   return (
+  //     <Paragraph className="text-white font-bold flex mx-auto">
+  //       {item[index]}
+  //     </Paragraph>
+  //   );
+  // };
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
@@ -131,34 +150,67 @@ export const Table = ({
                       key={item.id}
                       className="w-full flex hover:bg-background  py-4 border-b border-b-[#00000010]"
                     >
-                      {titles.map((title) => (
+                      {titles.map((title, index) => (
                         <td
                           className={`flex min-w-[180px]`}
                           style={{ width: calculateWidthSize() }}
                         >
-                          {title == 'Modalidade' ? (
-                            <div
-                              className={clsx(
-                                'flex items-center rounded text-center w-[80px] py-2',
-                                {
-                                  'bg-red-400': item[title] === 'Saida',
-                                  'bg-green-400': item[title] === 'Entrada',
-                                }
-                              )}
-                            >
-                              <Paragraph className="text-white font-bold flex mx-auto">
-                                {item[title] === 'price'
-                                  ? convertRealToQuantity(
-                                      item[title].toString()
-                                    )
-                                  : item[title]}
-                              </Paragraph>
-                            </div>
-                          ) : (
-                            <Paragraph className="!text-base">
-                              {item[title]}
-                            </Paragraph>
-                          )}
+                          {/* {getContentTable(title, item, index)} */}
+                          {(() => {
+                            console.log(title);
+                            switch (title) {
+                              case "Modalidade":
+                                return (
+                                  <Paragraph
+                                    className={clsx(
+                                      "flex items-center rounded text-center w-[80px] py-2",
+                                      {
+                                        "bg-red-400": item[title] === "Saida",
+                                        "bg-green-400":
+                                          item[title] === "Entrada",
+                                      }
+                                    )}
+                                  >
+                                    {item[title]}
+                                  </Paragraph>
+                                );
+
+                              case "price":
+                                const priceValue = parseFloat(item[title]);
+                                const formattedPrice = priceValue.toFixed(2);
+                                return (
+                                  <Paragraph className="!text-base">
+                                    {convertRealToQuantity(
+                                      formattedPrice.toString()
+                                    )}
+                                  </Paragraph>
+                                );
+
+                              case "validity":
+                                const originalValidity = item[title];
+                                const dateObject = new Date(originalValidity);
+                                const day = dateObject
+                                  .getUTCDate()
+                                  .toString()
+                                  .padStart(2, "0");
+                                const month = (dateObject.getUTCMonth() + 1)
+                                  .toString()
+                                  .padStart(2, "0");
+                                const year = dateObject.getUTCFullYear();
+
+                                const formattedValidity = `${day}/${month}/${year}`;
+                                return (
+                                  <Paragraph>{formattedValidity}</Paragraph>
+                                );
+
+                              default:
+                                return (
+                                  <Paragraph className="!text-base">
+                                    {item[title]}
+                                  </Paragraph>
+                                );
+                            }
+                          })()}
                         </td>
                       ))}
                       {!disableActions && (
