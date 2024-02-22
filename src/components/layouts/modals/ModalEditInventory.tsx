@@ -27,6 +27,8 @@ export const ModalEditInventory = ({
   console.log(currentInventory);
 
   const formik = useFormik({
+    isInitialValid: false,
+    validateOnBlur: true,
     enableReinitialize: true,
     initialValues: {
       lot: currentInventory?.lot || '',

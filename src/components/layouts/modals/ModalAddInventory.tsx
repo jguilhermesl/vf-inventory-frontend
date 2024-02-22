@@ -5,7 +5,13 @@ import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
 import { addInventorySchema } from '@/validation/inventory';
 import { useFormik } from 'formik';
 import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { AutoCompleteInput } from '@/components/AutoCompleteInput';
 import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
 import { convertFormatValidity } from '@/utils/convertFormatValidity';
@@ -43,6 +49,7 @@ export const ModalAddInventory = ({
   }, []);
 
   const formik = useFormik({
+    isInitialValid: false,
     initialValues: {
       quantity: 0,
       price: 0,
@@ -50,8 +57,18 @@ export const ModalAddInventory = ({
       lot: '',
       productId: '',
     },
+    validateOnBlur: true,
     validationSchema: addInventorySchema,
-    onSubmit: handleAddInventory,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await handleAddInventory(values);
+        formik.resetForm();
+        setSubmitting(false);
+      } catch (error) {
+        console.error('Erro ao adicionar estoque:', error);
+        setSubmitting(false);
+      }
+    },
   });
 
   return (

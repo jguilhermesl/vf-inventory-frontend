@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { convertCamelCaseToWords } from "@/utils/convertCamelCaseToWords";
+import { convertCamelCaseToWordsAndTranslate } from "@/utils/convertCamelCaseToWords";
 
 export const handleGeneratePDF = (content, tableTitle) => {
   if (!Array.isArray(content) || content.length === 0) {
@@ -9,7 +9,7 @@ export const handleGeneratePDF = (content, tableTitle) => {
 
   const doc = new jsPDF();
   const titles = Object.keys(content[0]);
-  const header = titles.map((title) => convertCamelCaseToWords(title));
+  const header = titles.map((title) => convertCamelCaseToWordsAndTranslate(title));
   const data = content.map((item) =>
     titles.map((title) => (item[title] != null ? String(item[title]) : ""))
   );
@@ -28,8 +28,8 @@ export const handleGeneratePDF = (content, tableTitle) => {
     .getDate()
     .toString()
     .padStart(2, "0")}.${(currentDate.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}.${currentDate.getFullYear()}`;
+      .toString()
+      .padStart(2, "0")}.${currentDate.getFullYear()}`;
 
   const formattedTime = `${currentDate
     .getHours()

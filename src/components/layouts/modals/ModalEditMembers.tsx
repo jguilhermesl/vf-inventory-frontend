@@ -6,7 +6,13 @@ import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
 import { addMemberSchema, editMemberSchema } from '@/validation/members';
 import { useFormik } from 'formik';
 import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 interface IModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +30,8 @@ export const ModalEditMembers = ({
   console.log(currentMember);
 
   const formik = useFormik({
+    isInitialValid: false,
+    validateOnBlur: true,
     enableReinitialize: true,
     initialValues: {
       name: currentMember?.name,

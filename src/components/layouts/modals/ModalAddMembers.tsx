@@ -22,6 +22,8 @@ export const ModalAddMember = ({
   handleAddMember,
 }: IModalAddProductProps) => {
   const formik = useFormik({
+    isInitialValid: false,
+    validateOnBlur: true,
     initialValues: {
       name: '',
       email: '',
@@ -29,9 +31,17 @@ export const ModalAddMember = ({
       password: '',
     },
     validationSchema: addMemberSchema,
-    onSubmit: handleAddMember,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await handleAddMember(values);
+        formik.resetForm();
+      } catch (error) {
+        console.error('Erro ao adicionar membro:', error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
   });
-  const [actionRole, setActionRole] = useState('');
 
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
@@ -62,8 +72,10 @@ export const ModalAddMember = ({
               {...formik.getFieldProps('email')}
             />
             <Dropdown
-              onValueChange={(value: string) => setActionRole(value)}
-              value={actionRole}
+              onValueChange={(value: string) => {
+                formik.setFieldValue('role', value);
+              }}
+              {...formik.getFieldProps('role')}
               options={MOCK_OPTIONS_ROLE_MEMBER}
               label="Cargo"
               placeholder="Selecione o tipo do cargo"
