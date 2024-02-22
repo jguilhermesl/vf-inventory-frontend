@@ -1,14 +1,14 @@
-import { ICreateUserBody } from '@/api/user';
-import { Button, ButtonVariant } from '@/components/Button';
-import { Dropdown } from '@/components/Dropdown';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { MOCK_OPTIONS_ROLE_MEMBER } from '@/constants/inventory';
-import { addMemberSchema } from '@/validation/members';
-import { useFormik } from 'formik';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { ICreateUserBody } from "@/api/user";
+import { Button, ButtonVariant } from "@/components/Button";
+import { Dropdown } from "@/components/Dropdown";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { MOCK_OPTIONS_ROLE_MEMBER } from "@/constants/inventory";
+import { addMemberSchema } from "@/validation/members";
+import { useFormik } from "formik";
+import { CheckCircle, XCircle } from "phosphor-react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -23,15 +23,24 @@ export const ModalAddMember = ({
 }: IModalAddProductProps) => {
   const formik = useFormik({
     initialValues: {
-      name: '',
-      email: '',
-      role: '',
-      password: '',
+      name: "",
+      email: "",
+      role: "",
+      password: "",
     },
     validationSchema: addMemberSchema,
-    onSubmit: handleAddMember,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await handleAddMember(values);
+        formik.resetForm();
+        setSubmitting(false);
+      } catch (error) {
+        console.error("Erro ao adicionar membro:", error);
+        setSubmitting(false);
+      }
+    },
   });
-  const [actionRole, setActionRole] = useState('');
+  const [actionRole, setActionRole] = useState("");
 
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
@@ -54,15 +63,17 @@ export const ModalAddMember = ({
             <Input
               label="Nome"
               error={formik.errors?.name as string}
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps("name")}
             />
             <Input
               label="Email"
               error={formik.errors?.email as string}
-              {...formik.getFieldProps('email')}
+              {...formik.getFieldProps("email")}
             />
             <Dropdown
-              onValueChange={(value: string) => setActionRole(value)}
+              onValueChange={(value: string) => {
+                setActionRole(value);
+              }}
               value={actionRole}
               options={MOCK_OPTIONS_ROLE_MEMBER}
               label="Cargo"
@@ -71,7 +82,7 @@ export const ModalAddMember = ({
             <Input
               label="Senha"
               error={formik.errors?.password as string}
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps("password")}
             />
             <Button
               type="submit"

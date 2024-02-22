@@ -1,13 +1,18 @@
-import { IAddProductBody } from '@/api/products';
-import { Button, ButtonVariant } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { Spinner } from '@/components/Spinner';
-import { addProductSchema } from '@/validation/products';
-import { useFormik } from 'formik';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction } from 'react';
+import { IAddProductBody } from "@/api/products";
+import { Button, ButtonVariant } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { addProductSchema } from "@/validation/products";
+import { useFormik } from "formik";
+import { CheckCircle, XCircle } from "phosphor-react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -24,12 +29,31 @@ export const ModalAddProduct = ({
 }: IModalAddProductProps) => {
   const formik = useFormik({
     initialValues: {
-      name: '',
-      sigla: '',
+      name: "",
+      sigla: "",
     },
     validationSchema: addProductSchema,
-    onSubmit: (values) => handleAddProduct(values),
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await handleAddProduct(values);
+        formik.resetForm();
+        setSubmitting(false);
+      } catch (error) {
+        console.error("Erro ao cadastrar produto:", error);
+        setSubmitting(false);
+      }
+    },
   });
+  const [isValid, setIsValid] = useState(false);
+  const handleValidButton = useCallback(() => {
+    const { name, sigla } = formik.values;
+    const isAllFilled = !!name && !!sigla;
+    setIsValid(isAllFilled);
+  }, [formik.values]);
+
+  useEffect(() => {
+    handleValidButton();
+  }, [formik.values]);
 
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
@@ -52,15 +76,15 @@ export const ModalAddProduct = ({
             <Input
               label="Nome"
               error={formik.errors?.name as string}
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps("name")}
             />
             <Input
               label="Sigla"
               error={formik.errors?.sigla as string}
-              {...formik.getFieldProps('sigla')}
+              {...formik.getFieldProps("sigla")}
             />
             <Button
-              disabled={isLoading}
+              disabled={isLoading || !isValid}
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
               isLoading={formik.isSubmitting}

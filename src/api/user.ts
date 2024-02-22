@@ -2,7 +2,7 @@ import api from "./axios";
 
 export interface ICreateUserBody {
   name: string;
-  role: "admin" | "member";
+  role: string;
   password: string;
   email: string;
 }
@@ -31,8 +31,8 @@ export const addUser = async (data: ICreateUserBody) => {
 export const fetchAllUsers = async (search?: string) => {
   const response = await api.get("/users", {
     params: {
-      search
-    }
+      search,
+    },
   });
   return response.data;
 };

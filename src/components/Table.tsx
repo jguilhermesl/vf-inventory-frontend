@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import 'jspdf-autotable';
+import React, { useCallback, useEffect, useState } from "react";
+import "jspdf-autotable";
 import {
   FileCsv,
   FilePdf,
   MagnifyingGlass,
   PencilLine,
   Trash,
-} from 'phosphor-react';
-import { Line } from './Line';
-import { Paragraph, ParagraphSizeVariant } from './Paragraph';
-import { ReactNode } from 'react';
-import { Input } from './Input';
-import clsx from 'clsx';
-import { convertCamelCaseToWordsAndTranslate } from '@/utils/convertCamelCaseToWords';
-import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
-import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
-import { Spinner } from './Spinner';
-import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
-import { Button } from './Button';
-import { convertFormatValidity } from '@/utils/convertFormatValidity';
-import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
-import { useDebounce } from '@/hooks/useDebouce';
+} from "phosphor-react";
+import { Line } from "./Line";
+import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
+import { ReactNode } from "react";
+import { Input } from "./Input";
+import clsx from "clsx";
+import { convertCamelCaseToWordsAndTranslate } from "@/utils/convertCamelCaseToWords";
+import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
+import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
+import { Spinner } from "./Spinner";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { Button } from "./Button";
+import { convertFormatValidity } from "@/utils/convertFormatValidity";
+import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
+import { useDebounce } from "@/hooks/useDebouce";
 
 interface ITableProps {
   content: any[];
@@ -43,17 +43,17 @@ export const Table = ({
   handleEditItem,
   disableDeleteItem,
   disableEditItem,
-  emptyMessage = 'Não foi encontrado nenhum dado.',
+  emptyMessage = "Não foi encontrado nenhum dado.",
   disableActions,
   tableTitle,
   isLoading,
   handleGetItemsWithSearch = async () => {},
 }: ITableProps) => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 1000);
 
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != 'id')
+    ? Object.keys(content[0]).filter((item) => item != "id")
     : [];
 
   const columnsQuantity = titles.length;
@@ -145,24 +145,25 @@ export const Table = ({
                           style={{ width: calculateWidthSize() }}
                         >
                           {(() => {
+                            console.log(title);
                             switch (title) {
-                              case 'type':
+                              case "type":
                                 return (
                                   <Paragraph
                                     className={clsx(
-                                      'flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1',
+                                      "flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1",
                                       {
-                                        'bg-red-400': item[title] === 'output',
-                                        'bg-green-400': item[title] === 'input',
+                                        "bg-red-400": item[title] === "output",
+                                        "bg-green-400": item[title] === "input",
                                       }
                                     )}
                                   >
-                                    {item[title] === 'output' && 'Saída'}
-                                    {item[title] === 'input' && 'Entrada'}
+                                    {item[title] === "output" && "Saída"}
+                                    {item[title] === "input" && "Entrada"}
                                   </Paragraph>
                                 );
 
-                              case 'price':
+                              case "price":
                                 const priceValue = parseFloat(item[title]);
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
@@ -173,7 +174,7 @@ export const Table = ({
                                   </Paragraph>
                                 );
 
-                              case 'validity' || 'createdAt':
+                              case "validity":
                                 const originalValidity = item[title];
                                 const formattedValidity =
                                   formatDateToDDMMYYYY(originalValidity);
@@ -181,10 +182,18 @@ export const Table = ({
                                   <Paragraph>{formattedValidity}</Paragraph>
                                 );
 
+                              case "createdAt":
+                                const originalCreated = item[title];
+                                const formattedCreated =
+                                  formatDateToDDMMYYYY(originalCreated);
+                                return (
+                                  <Paragraph>{formattedCreated} </Paragraph>
+                                );
+
                               default:
                                 return (
                                   <Paragraph className="!text-base">
-                                    {item[title] ?? '-'}
+                                    {item[title] ?? "-"}
                                   </Paragraph>
                                 );
                             }

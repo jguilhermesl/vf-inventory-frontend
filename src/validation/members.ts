@@ -6,7 +6,7 @@ export const addMemberSchema = Yup.object().shape({
     .email("Digite um e-mail válido")
     .required("Campo obrigatório"),
   password: Yup.string().required("Campo obrigatório"),
-  role: Yup.string().required("Campo obrigatório"),
+  role: Yup.string(),
 });
 
 export const editMemberSchema = Yup.object().shape({

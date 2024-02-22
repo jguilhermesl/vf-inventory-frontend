@@ -1,12 +1,18 @@
-import { IEditMember } from '@/@types/user';
-import { Button, ButtonVariant } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { addMemberSchema, editMemberSchema } from '@/validation/members';
-import { useFormik } from 'formik';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { IEditMember } from "@/@types/user";
+import { Button, ButtonVariant } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { addMemberSchema, editMemberSchema } from "@/validation/members";
+import { useFormik } from "formik";
+import { CheckCircle, XCircle } from "phosphor-react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 interface IModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -29,12 +35,23 @@ export const ModalEditMembers = ({
       name: currentMember?.name,
       email: currentMember?.email,
       role: currentMember?.role,
-      password: '',
+      password: "",
     },
     validationSchema: editMemberSchema,
     onSubmit: (values) => handleEditMember(values),
   });
 
+  const [isValid, setIsValid] = useState(false);
+
+  const handleValidButton = useCallback(() => {
+    const { name, email, role, password } = formik.values;
+    const isAllFilled = !!name && !!email && !!role && !!password;
+    setIsValid(isAllFilled);
+  }, [formik.values]);
+
+  useEffect(() => {
+    handleValidButton();
+  }, [formik.values]);
   return (
     <Modal.Root isOpen={modalIsOpen} setIsOpen={setModalIsOpen}>
       <Modal.Content>
@@ -57,27 +74,27 @@ export const ModalEditMembers = ({
               label="Nome"
               value={currentMember.name}
               error={formik.errors?.name as string}
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps("name")}
             />
             <Input
               label="Email"
               error={formik.errors?.email as string}
-              {...formik.getFieldProps('email')}
+              {...formik.getFieldProps("email")}
             />
             <Input
               label="Cargo"
               error={formik.errors?.role as string}
-              {...formik.getFieldProps('role')}
+              {...formik.getFieldProps("role")}
             />
             <Input
               label="Senha"
               error={formik.errors?.password as string}
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps("password")}
             />
             <Button
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
-              disabled={formik.isSubmitting || !formik.isValid}
+              disabled={formik.isSubmitting || !formik.isValid || !isValid}
               isLoading={formik.isSubmitting}
             >
               Salvar Membro

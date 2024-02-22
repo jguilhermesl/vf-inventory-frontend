@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import LogoImage from '@/assets/logo.png';
+import Image from "next/image";
+import logoVf from "@/assets/vfLogo.png";
 
 interface ILogoProps {
   className?: string;
@@ -8,7 +8,7 @@ interface ILogoProps {
 export const Logo = ({ className }: ILogoProps) => {
   return (
     <div>
-      <Image className={className} src={LogoImage} width={150} alt="" />
+      <Image className={className} src={logoVf} width={180} alt="" />
     </div>
   );
 };
