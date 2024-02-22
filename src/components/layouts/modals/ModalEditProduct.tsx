@@ -22,6 +22,8 @@ export const ModalEditProduct = ({
   handleEditProduct,
 }: ModalEditProductProps) => {
   const formik = useFormik({
+    isInitialValid: false,
+    validateOnBlur: true,
     enableReinitialize: true,
     initialValues: {
       name: currentProduct?.name,
