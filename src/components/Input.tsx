@@ -109,7 +109,7 @@ export const Input = ({
         )}
       </div>
 
-      {label && (
+      {label && error && (
         <Paragraph
           className={clsx({
             'before:content-["ok"] opacity-0': !error,

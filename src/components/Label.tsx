@@ -20,7 +20,7 @@ export const Label = ({
 }: LabelProps) => {
   return (
     <label
-      className={clsx('flex flex-col gap-4 w-full', className)}
+      className={clsx('flex flex-col gap-2 w-full', className)}
       htmlFor={name}
       {...props}
     >

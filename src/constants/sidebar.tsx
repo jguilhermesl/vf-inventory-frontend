@@ -29,7 +29,7 @@ export const TABS_SIDEBAR = [
     ),
   },
   {
-    title: 'Baixa de estoque',
+    title: 'Ações de estoque',
     route: '/action-inventory',
     icon: (isActive) => (
       <ArrowSquareOut size={20} color={isActive ? '#b80105' : '#000'} />

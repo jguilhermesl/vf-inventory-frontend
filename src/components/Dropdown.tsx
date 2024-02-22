@@ -6,6 +6,7 @@ import { DropdownItem } from './DropdownItem';
 import clsx from 'clsx';
 import { Label } from './Label';
 import { Spinner } from './Spinner';
+import { Paragraph } from './Paragraph';
 
 export enum DropdownVariant {
   Default = 'default',
@@ -109,6 +110,17 @@ export const Dropdown = ({
           </Select.Content>
         </Select.Portal>
       </Select.Root>
+
+      {label && error && (
+        <Paragraph
+          className={clsx({
+            'before:content-["ok"] opacity-0': !error,
+          })}
+          hasError={!!error}
+        >
+          {error}
+        </Paragraph>
+      )}
     </Label>
   );
 };

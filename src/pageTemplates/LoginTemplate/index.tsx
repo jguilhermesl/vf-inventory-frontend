@@ -5,10 +5,11 @@ import { useFormik } from 'formik';
 import { validationSchema } from '@/validation/login';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { Spinner } from '@/components/Spinner';
 
 export const LoginTemplate = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { handleLogin } = useAuth();
+  const { handleAuth } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -16,7 +17,8 @@ export const LoginTemplate = () => {
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => handleLogin(values.email, values.password),
+    onSubmit: (values) =>
+      handleAuth({ email: values.email, password: values.password }),
   });
 
   return (
@@ -30,6 +32,7 @@ export const LoginTemplate = () => {
           label="Email"
           type="text"
           id="email"
+          autoComplete="off"
           error={formik.errors?.email as string}
           {...formik.getFieldProps('email')}
           iconRight={<Envelope size={16} />}
@@ -37,6 +40,7 @@ export const LoginTemplate = () => {
       </div>
       <div className="mb-4">
         <Input
+          autoComplete="off"
           label="Senha"
           type={showPassword ? 'text' : 'password'}
           id="password"
@@ -68,7 +72,9 @@ export const LoginTemplate = () => {
           <div className="text-red-800">{formik.errors.password}</div>
         )}
       </div>
-      <Button type="submit">Entrar</Button>
+      <Button type="submit">
+        {formik.isSubmitting ? <Spinner /> : 'Entrar'}
+      </Button>
     </form>
   );
 };

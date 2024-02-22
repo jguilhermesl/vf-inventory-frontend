@@ -1,32 +1,46 @@
-import { Button, ButtonVariant } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { Modal } from "@/components/Modal";
-import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
-import { addMemberSchema } from "@/validation/members";
-import { useFormik } from "formik";
-import { CheckCircle, XCircle } from "phosphor-react";
-import { Dispatch, SetStateAction } from "react";
+import { ICreateUserBody } from '@/api/user';
+import { Button, ButtonVariant } from '@/components/Button';
+import { Dropdown } from '@/components/Dropdown';
+import { Input } from '@/components/Input';
+import { Modal } from '@/components/Modal';
+import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
+import { MOCK_OPTIONS_ROLE_MEMBER } from '@/constants/inventory';
+import { addMemberSchema } from '@/validation/members';
+import { useFormik } from 'formik';
+import { CheckCircle, XCircle } from 'phosphor-react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
+  handleAddMember: (values: ICreateUserBody) => Promise<void>;
 }
 
 export const ModalAddMember = ({
   setModalIsOpen,
   modalIsOpen,
+  handleAddMember,
 }: IModalAddProductProps) => {
-  const handleAddMember = () => {};
-
   const formik = useFormik({
+    isInitialValid: false,
+    validateOnBlur: true,
     initialValues: {
-      name: "",
-      email: "",
-      cargo: "",
-      senha: "",
+      name: '',
+      email: '',
+      role: '',
+      password: '',
     },
     validationSchema: addMemberSchema,
-    onSubmit: handleAddMember,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await handleAddMember(values);
+        formik.resetForm();
+      } catch (error) {
+        console.error('Erro ao adicionar membro:', error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
   });
 
   return (
@@ -43,30 +57,40 @@ export const ModalAddMember = ({
               </Button>
             </Modal.Close>
           </header>
-          <form className="mt-6" onSubmit={() => {}}>
+          <form
+            className="mt-6 flex flex-col gap-4"
+            onSubmit={formik.handleSubmit}
+          >
             <Input
               label="Nome"
               error={formik.errors?.name as string}
-              {...formik.getFieldProps("name")}
+              {...formik.getFieldProps('name')}
             />
             <Input
               label="Email"
               error={formik.errors?.email as string}
-              {...formik.getFieldProps("email")}
+              {...formik.getFieldProps('email')}
             />
-            <Input
+            <Dropdown
+              onValueChange={(value: string) => {
+                formik.setFieldValue('role', value);
+              }}
+              {...formik.getFieldProps('role')}
+              options={MOCK_OPTIONS_ROLE_MEMBER}
               label="Cargo"
-              error={formik.errors?.cargo as string}
-              {...formik.getFieldProps("cargo")}
+              placeholder="Selecione o tipo do cargo"
             />
             <Input
               label="Senha"
-              error={formik.errors?.senha as string}
-              {...formik.getFieldProps("senha")}
+              error={formik.errors?.password as string}
+              {...formik.getFieldProps('password')}
             />
             <Button
+              type="submit"
               className="w-[220px] mx-auto !text-sm"
               leftIcon={<CheckCircle color="#FFF" size={16} />}
+              disabled={formik.isSubmitting || !formik.isValid}
+              isLoading={formik.isSubmitting}
             >
               Adicionar Membro
             </Button>

@@ -1,5 +1,12 @@
-import { MembersTemplate } from "@/pageTemplates/MembersTemplate/index";
+import { MembersTemplate } from '@/pageTemplates/MembersTemplate/index';
+import { canSSRAuth } from '@/utils/canSSRAuth';
 
-const Membros = () => <MembersTemplate />;
+const Members = () => <MembersTemplate />;
 
-export default Membros;
+export default Members;
+
+export const getServerSideProps = canSSRAuth(async () => {
+  return {
+    props: {},
+  };
+});
