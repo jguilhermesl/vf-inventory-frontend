@@ -1,27 +1,29 @@
-import { fetchHistory } from '@/api/history';
-import { Heading } from '@/components/Heading';
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { Paragraph } from '@/components/Paragraph';
-import { Table } from '@/components/Table';
-import { MOCK_HISTORY } from '@/constants/history';
-import { handleToast } from '@/utils/handleToast';
-import { useCallback, useEffect, useState } from 'react';
+import { fetchHistory } from "@/api/history";
+import { Heading } from "@/components/Heading";
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Paragraph } from "@/components/Paragraph";
+import { Table } from "@/components/Table";
+import { handleToast } from "@/utils/handleToast";
+import { useCallback, useEffect, useState } from "react";
 
 export const HistoryTemplate = () => {
-  const [history, setHistory] = useState(MOCK_HISTORY);
+  const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleFetchHistory = useCallback(async (search?: string) => {
-    setIsLoading(true);
-    try {
-      const { history: data } = await fetchHistory(search ?? '');
-      setHistory(data);
-    } catch (err) {
-      handleToast('Algo deu errado.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const handleFetchHistory = useCallback(
+    async (search?: string, page?: number) => {
+      setIsLoading(true);
+      try {
+        const { history: data } = await fetchHistory(search ?? "", page ?? 1);
+        setHistory(data);
+      } catch (err) {
+        handleToast("Algo deu errado.", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     handleFetchHistory();
