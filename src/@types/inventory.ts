@@ -1,11 +1,11 @@
 export interface IInventoryModel {
-  id: string,
+  id: string;
   lot: string;
   price: number;
   quantity: number;
   validity: string;
   productId: string;
-  productName: string
+  productName: string;
 }
 
 export interface IAddInventoryBody {
@@ -17,15 +17,16 @@ export interface IAddInventoryBody {
 }
 
 export interface IEditInventoryBody {
-  lot: string,
-  price: number,
-  quantity: number,
-  validity: string
+  lot: string;
+  price: number;
+  quantity: number;
+  validity: string;
 }
 
 export interface IActionInventoryBody {
-  customerPaymentType: string,
-  customerName: string,
-  quantity: number,
-  type: "input" | "output"
+  customerPaymentType: string;
+  customerName: string;
+  quantity: number;
+  type: "input" | "output";
+  price: number;
 }

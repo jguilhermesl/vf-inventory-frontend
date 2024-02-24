@@ -11,6 +11,7 @@ import {
   MOCK_OPTIONS_ACTIONS_TYPE,
   MOCK_OPTIONS_PAYMENTS_TYPE,
 } from "@/constants/inventory";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
 import { handleToast } from "@/utils/handleToast";
 import { actionInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
@@ -52,6 +53,7 @@ export const ActionInventoryTemplate = () => {
         customerName,
         customerPaymentType,
         quantity: values.quantity,
+        price: values.price,
       };
 
       formik.resetForm();
@@ -74,6 +76,7 @@ export const ActionInventoryTemplate = () => {
       customerName: "",
       customerPaymentType: "",
       inventoryId: "",
+      price: 0,
     },
     validationSchema: actionInventorySchema,
     onSubmit: (values) => handleActionInventory(values),
@@ -140,6 +143,16 @@ export const ActionInventoryTemplate = () => {
               type={"number"}
               error={formik.errors?.quantity as string}
               {...formik.getFieldProps("quantity")}
+            />
+            <Input
+              label="Preço"
+              error={formik.errors?.price as string}
+              {...formik.getFieldProps("price")}
+              placeholder="Digite o preço"
+              onChange={(e) => {
+                const formattedValue = convertRealToQuantity(e.target.value);
+                formik.setFieldValue("price", formattedValue);
+              }}
             />
             <Button
               className="!w-[250px] mx-auto flex"
