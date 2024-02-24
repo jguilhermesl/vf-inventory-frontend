@@ -28,10 +28,11 @@ export const addUser = async (data: ICreateUserBody) => {
   return response.data;
 };
 
-export const fetchAllUsers = async (search?: string) => {
+export const fetchAllUsers = async (search?: string, page?: number) => {
   const response = await api.get("/users", {
     params: {
       search,
+      page,
     },
   });
   return response.data;

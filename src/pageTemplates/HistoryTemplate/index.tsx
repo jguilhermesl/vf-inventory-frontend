@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 export const HistoryTemplate = () => {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleFetchHistory = useCallback(
     async (search?: string, page?: number) => {
@@ -16,6 +17,7 @@ export const HistoryTemplate = () => {
       try {
         const { history: data } = await fetchHistory(search ?? "", page ?? 1);
         setHistory(data);
+        setTotalPages(page);
       } catch (err) {
         handleToast("Algo deu errado.", "error");
       } finally {
@@ -45,6 +47,7 @@ export const HistoryTemplate = () => {
             tableTitle="Historico"
             isLoading={isLoading}
             handleGetItemsWithSearch={handleFetchHistory}
+            totalPage={totalPages}
           />
         </div>
       </LayoutWithSidebar>

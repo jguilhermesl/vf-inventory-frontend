@@ -23,6 +23,8 @@ import { Button } from "./Button";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 import { useDebounce } from "@/hooks/useDebouce";
+import { getDifferenceDays } from "@/utils/getDifferenceDays";
+import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
 
 interface ITableProps {
   content: any[];
@@ -36,6 +38,7 @@ interface ITableProps {
   headerComponent?: ReactNode;
   disableActions?: boolean;
   isLoading?: boolean;
+  totalPage: number;
   handleGetItemsWithSearch?: (search: string, page: number) => Promise<void>;
 }
 
@@ -49,6 +52,7 @@ export const Table = ({
   disableActions,
   tableTitle,
   isLoading,
+  totalPage,
   handleGetItemsWithSearch = async () => {},
 }: ITableProps) => {
   const [search, setSearch] = useState("");
@@ -71,6 +75,9 @@ export const Table = ({
   };
 
   const nextPage = async () => {
+    if (totalPage < currentPage) {
+      return;
+    }
     await setCurrentPage(currentPage + 1);
   };
   const prevPage = async () => {
@@ -158,7 +165,6 @@ export const Table = ({
                           style={{ width: calculateWidthSize() }}
                         >
                           {(() => {
-                            console.log(title);
                             switch (title) {
                               case "type":
                                 return (
@@ -191,13 +197,8 @@ export const Table = ({
                                 const originalValidity = item[title];
                                 const formattedValidity =
                                   formatDateToDDMMYYYY(originalValidity);
-                                const newDate = new Date();
-                                const validityDate = new Date(originalValidity);
-                                const timeDifference =
-                                  validityDate.getTime() - newDate.getTime();
-                                const daysDifference = Math.floor(
-                                  timeDifference / (1000 * 60 * 60 * 24)
-                                );
+                                const daysDifference =
+                                  getDifferenceDays(originalValidity);
 
                                 return (
                                   <Paragraph
@@ -225,30 +226,13 @@ export const Table = ({
                                 );
 
                               case "customerPaymentType":
-                                let metodoPagement = "";
-                                switch (item[title]) {
-                                  case "pix":
-                                    metodoPagement = "Pix";
-                                    break;
-                                  case "credit-card":
-                                    metodoPagement = "Cartão de Crédito";
-                                    break;
-                                  case "debit-card":
-                                    metodoPagement = "Cartão de Débito";
-                                    break;
-                                  case "prazo":
-                                    metodoPagement = "Prazo";
-                                    break;
-                                  case "money":
-                                    metodoPagement = "Dinheiro";
-                                    break;
-                                  default:
-                                    metodoPagement = "-";
-                                }
+                                const chosenMethod = item[title];
+                                const paymentMethod =
+                                  getPaymentMethodLabel(chosenMethod);
 
                                 return (
                                   <Paragraph className="!text-base">
-                                    {metodoPagement}
+                                    {paymentMethod}
                                   </Paragraph>
                                 );
 
