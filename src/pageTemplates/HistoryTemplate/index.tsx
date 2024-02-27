@@ -15,9 +15,12 @@ export const HistoryTemplate = () => {
     async (search?: string, page?: number) => {
       setIsLoading(true);
       try {
-        const { history: data } = await fetchHistory(search ?? "", page ?? 1);
-        setHistory(data);
-        setTotalPages(page);
+        const { history, totalPages } = await fetchHistory(
+          search ?? "",
+          page ?? 1
+        );
+        setHistory(history);
+        setTotalPages(totalPages);
       } catch (err) {
         handleToast("Algo deu errado.", "error");
       } finally {

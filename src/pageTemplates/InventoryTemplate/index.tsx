@@ -40,8 +40,12 @@ export const InventoryTemplate = () => {
     async (search?: string, page?: number) => {
       setIsLoading(true);
       try {
-        const response = await fetchInventory(search ?? "", page ?? 1);
-        setInventory(response.inventory);
+        const { inventory, totalPages } = await fetchInventory(
+          search ?? "",
+          page ?? 1
+        );
+        setInventory(inventory);
+        setTotalPages(totalPages);
       } catch (err) {
         console.log(err);
       } finally {

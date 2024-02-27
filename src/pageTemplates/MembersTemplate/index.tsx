@@ -78,8 +78,12 @@ export const MembersTemplate = () => {
     async (search?: string, page?: number) => {
       setIsLoading(true);
       try {
-        const response = await fetchAllUsers(search ?? "", page ?? 1);
-        setMembers(response.users);
+        const { users, totalPages } = await fetchAllUsers(
+          search ?? "",
+          page ?? 1
+        );
+        setMembers(users);
+        setTotalPages(totalPages);
       } catch (err) {
         console.log(err);
       } finally {

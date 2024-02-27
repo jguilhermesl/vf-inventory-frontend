@@ -74,17 +74,17 @@ export const Table = ({
     await handleGetItemsWithSearch(debouncedSearch as string, currentPage);
   };
 
-  const nextPage = async () => {
-    if (totalPage < currentPage) {
+  const nextPage = () => {
+    if (totalPage <= currentPage) {
       return;
     }
-    await setCurrentPage(currentPage + 1);
+    setCurrentPage(currentPage + 1);
   };
-  const prevPage = async () => {
+  const prevPage = () => {
     if (currentPage <= 1) {
       return;
     }
-    await setCurrentPage(currentPage - 1);
+    setCurrentPage(currentPage - 1);
   };
 
   useEffect(() => {
@@ -285,20 +285,20 @@ export const Table = ({
                   Total de itens: {content.length}
                 </Paragraph>
                 <div className="flex items-center gap-4">
-                  <button className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center">
-                    <CaretLeft
-                      size={20}
-                      color="#FFF"
-                      onClick={() => prevPage()}
-                    />
+                  <button
+                    className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center disabled:bg-gray-200"
+                    onClick={prevPage}
+                    disabled={currentPage == 1}
+                  >
+                    <CaretLeft size={20} color="#FFF" />
                   </button>
                   <Paragraph> {currentPage} </Paragraph>
-                  <button className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center">
-                    <CaretRight
-                      size={20}
-                      color="#FFF"
-                      onClick={() => nextPage()}
-                    />
+                  <button
+                    onClick={nextPage}
+                    disabled={currentPage == totalPage}
+                    className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center disabled:bg-gray-200"
+                  >
+                    <CaretRight size={20} color="#FFF" />
                   </button>
                 </div>
               </div>

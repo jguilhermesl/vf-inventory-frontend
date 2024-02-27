@@ -16,12 +16,30 @@ import { handleToast } from "@/utils/handleToast";
 import { actionInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
 import { CheckCircle } from "phosphor-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const ActionInventoryTemplate = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [autoCompleteValue, setAutoCompleteValue] = useState("");
+  // const [inventory, setInventory] = useState([]);
+  // const handleFetchInventory = useCallback(
+  //   async (search?: string, page?: number) => {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await fetchInventory(search ?? "", page ?? 1);
+  //       setInventory(response.inventory);
+  //     } catch (err) {
+  //       console.log(err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   },
+  //   []
+  // );
+  // useEffect(() => {
+  //   handleFetchInventory();
+  // }, [handleFetchInventory]);
 
   const handleGetInventory = useCallback(async (value: string) => {
     const lowercaseQuery = value.toLowerCase();

@@ -82,8 +82,12 @@ export const ProductsTemplate = () => {
     async (search?: string, page?: number) => {
       setIsLoading(true);
       try {
-        const response = await fetchProducts(search ?? "", page ?? 1);
-        setProducts(response.products);
+        const { products, totalPages } = await fetchProducts(
+          search ?? "",
+          page ?? 1
+        );
+        setProducts(products);
+        setTotalPages(totalPages);
       } catch (err) {
         console.log(err);
       } finally {
