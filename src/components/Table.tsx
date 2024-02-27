@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "jspdf-autotable";
 import {
+  CaretLeft,
+  CaretRight,
   FileCsv,
   FilePdf,
   MagnifyingGlass,
@@ -21,6 +23,8 @@ import { Button } from "./Button";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 import { useDebounce } from "@/hooks/useDebouce";
+import { getDifferenceDays } from "@/utils/getDifferenceDays";
+import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
 
 interface ITableProps {
   content: any[];
@@ -34,7 +38,8 @@ interface ITableProps {
   headerComponent?: ReactNode;
   disableActions?: boolean;
   isLoading?: boolean;
-  handleGetItemsWithSearch?: (search: string) => Promise<void>;
+  totalPage: number;
+  handleGetItemsWithSearch?: (search: string, page: number) => Promise<void>;
 }
 
 export const Table = ({
@@ -47,9 +52,11 @@ export const Table = ({
   disableActions,
   tableTitle,
   isLoading,
+  totalPage,
   handleGetItemsWithSearch = async () => {},
 }: ITableProps) => {
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearch = useDebounce(search, 1000);
 
   const titles = content[0]
@@ -64,12 +71,25 @@ export const Table = ({
   };
 
   const handleSearch = async () => {
-    await handleGetItemsWithSearch(debouncedSearch as string);
+    await handleGetItemsWithSearch(debouncedSearch as string, currentPage);
+  };
+
+  const nextPage = () => {
+    if (totalPage <= currentPage) {
+      return;
+    }
+    setCurrentPage(currentPage + 1);
+  };
+  const prevPage = () => {
+    if (currentPage <= 1) {
+      return;
+    }
+    setCurrentPage(currentPage - 1);
   };
 
   useEffect(() => {
     handleSearch();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage]);
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
@@ -145,7 +165,6 @@ export const Table = ({
                           style={{ width: calculateWidthSize() }}
                         >
                           {(() => {
-                            console.log(title);
                             switch (title) {
                               case "type":
                                 return (
@@ -178,8 +197,24 @@ export const Table = ({
                                 const originalValidity = item[title];
                                 const formattedValidity =
                                   formatDateToDDMMYYYY(originalValidity);
+                                const daysDifference =
+                                  getDifferenceDays(originalValidity);
+
                                 return (
-                                  <Paragraph>{formattedValidity}</Paragraph>
+                                  <Paragraph
+                                    className={clsx(
+                                      "flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1",
+                                      {
+                                        "bg-red-400": daysDifference <= 5,
+                                        "bg-yellow-400":
+                                          daysDifference >= 6 &&
+                                          daysDifference <= 20,
+                                        "bg-green-400": daysDifference > 20,
+                                      }
+                                    )}
+                                  >
+                                    {formattedValidity}
+                                  </Paragraph>
                                 );
 
                               case "createdAt":
@@ -188,6 +223,17 @@ export const Table = ({
                                   formatDateToDDMMYYYY(originalCreated);
                                 return (
                                   <Paragraph>{formattedCreated} </Paragraph>
+                                );
+
+                              case "customerPaymentType":
+                                const chosenMethod = item[title];
+                                const paymentMethod =
+                                  getPaymentMethodLabel(chosenMethod);
+
+                                return (
+                                  <Paragraph className="!text-base">
+                                    {paymentMethod}
+                                  </Paragraph>
                                 );
 
                               default:
@@ -234,10 +280,27 @@ export const Table = ({
                 </tbody>
               </table>
               <Line className="my-4 " />
-              <div className="mb-4">
+              <div className="mb-4 flex justify-between">
                 <Paragraph size={ParagraphSizeVariant.Large}>
                   Total de itens: {content.length}
                 </Paragraph>
+                <div className="flex items-center gap-4">
+                  <button
+                    className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center disabled:bg-gray-200"
+                    onClick={prevPage}
+                    disabled={currentPage == 1}
+                  >
+                    <CaretLeft size={20} color="#FFF" />
+                  </button>
+                  <Paragraph> {currentPage} </Paragraph>
+                  <button
+                    onClick={nextPage}
+                    disabled={currentPage == totalPage}
+                    className="!w-8 !h-8 bg-primary rounded-full items-center flex justify-center disabled:bg-gray-200"
+                  >
+                    <CaretRight size={20} color="#FFF" />
+                  </button>
+                </div>
               </div>
             </>
           ) : (

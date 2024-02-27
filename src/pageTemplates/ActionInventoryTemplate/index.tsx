@@ -1,26 +1,45 @@
-import { IActionInventoryBody } from '@/@types/inventory';
-import { actionInventory, fetchInventory } from '@/api/inventory';
-import { AutoCompleteInput } from '@/components/AutoCompleteInput';
-import { Button } from '@/components/Button';
-import { Dropdown } from '@/components/Dropdown';
-import { Heading } from '@/components/Heading';
-import { Input } from '@/components/Input';
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { Paragraph } from '@/components/Paragraph';
+import { IActionInventoryBody } from "@/@types/inventory";
+import { actionInventory, fetchInventory } from "@/api/inventory";
+import { AutoCompleteInput } from "@/components/AutoCompleteInput";
+import { Button } from "@/components/Button";
+import { Dropdown } from "@/components/Dropdown";
+import { Heading } from "@/components/Heading";
+import { Input } from "@/components/Input";
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Paragraph } from "@/components/Paragraph";
 import {
   MOCK_OPTIONS_ACTIONS_TYPE,
   MOCK_OPTIONS_PAYMENTS_TYPE,
-} from '@/constants/inventory';
-import { handleToast } from '@/utils/handleToast';
-import { actionInventorySchema } from '@/validation/inventory';
-import { useFormik } from 'formik';
-import { CheckCircle } from 'phosphor-react';
-import { useCallback, useState } from 'react';
+} from "@/constants/inventory";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { handleToast } from "@/utils/handleToast";
+import { actionInventorySchema } from "@/validation/inventory";
+import { useFormik } from "formik";
+import { CheckCircle } from "phosphor-react";
+import { useCallback, useEffect, useState } from "react";
 
 export const ActionInventoryTemplate = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [autoCompleteValue, setAutoCompleteValue] = useState('');
+  const [autoCompleteValue, setAutoCompleteValue] = useState("");
+  // const [inventory, setInventory] = useState([]);
+  // const handleFetchInventory = useCallback(
+  //   async (search?: string, page?: number) => {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await fetchInventory(search ?? "", page ?? 1);
+  //       setInventory(response.inventory);
+  //     } catch (err) {
+  //       console.log(err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   },
+  //   []
+  // );
+  // useEffect(() => {
+  //   handleFetchInventory();
+  // }, [handleFetchInventory]);
 
   const handleGetInventory = useCallback(async (value: string) => {
     const lowercaseQuery = value.toLowerCase();
@@ -43,24 +62,25 @@ export const ActionInventoryTemplate = () => {
     setIsLoading(true);
     try {
       const customerName =
-        values.type === 'output' ? values.customerName : null;
+        values.type === "output" ? values.customerName : null;
       const customerPaymentType =
-        values.type === 'output' ? values.customerPaymentType : null;
+        values.type === "output" ? values.customerPaymentType : null;
 
       const data: IActionInventoryBody = {
         type: values.type,
         customerName,
         customerPaymentType,
         quantity: values.quantity,
+        price: values.price,
       };
 
       formik.resetForm();
-      setAutoCompleteValue('');
+      setAutoCompleteValue("");
       await actionInventory(data, values.inventoryId);
-      handleToast('Ação realizada com sucesso.', 'success');
+      handleToast("Ação realizada com sucesso.", "success");
     } catch (err) {
       console.log(err);
-      handleToast('Algo deu errado.', 'error');
+      handleToast("Algo deu errado.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -70,10 +90,11 @@ export const ActionInventoryTemplate = () => {
     enableReinitialize: true,
     initialValues: {
       quantity: 0,
-      type: 'input',
-      customerName: '',
-      customerPaymentType: '',
-      inventoryId: '',
+      type: "input",
+      customerName: "",
+      customerPaymentType: "",
+      inventoryId: "",
+      price: 0,
     },
     validationSchema: actionInventorySchema,
     onSubmit: (values) => handleActionInventory(values),
@@ -95,29 +116,29 @@ export const ActionInventoryTemplate = () => {
           <form className="flex flex-col gap-4" onSubmit={formik.handleSubmit}>
             <Dropdown
               onValueChange={(value: string) => {
-                console.log('values', value);
-                formik.setFieldValue('type', value);
+                console.log("values", value);
+                formik.setFieldValue("type", value);
               }}
               options={MOCK_OPTIONS_ACTIONS_TYPE}
               error={formik.errors?.type as string}
-              {...formik.getFieldProps('type')}
+              {...formik.getFieldProps("type")}
               label="Tipo da ação"
               placeholder="Selecione o tipo da ação"
             />
-            {formik.values.type === 'output' && (
+            {formik.values.type === "output" && (
               <>
                 <Input
                   placeholder="Digite o nome do cliente"
                   label="Cliente"
                   error={formik.errors?.customerName as string}
-                  {...formik.getFieldProps('customerName')}
+                  {...formik.getFieldProps("customerName")}
                 />
                 <Dropdown
                   onValueChange={(value: string) =>
-                    formik.setFieldValue('customerPaymentType', value)
+                    formik.setFieldValue("customerPaymentType", value)
                   }
                   error={formik.errors?.customerPaymentType as string}
-                  {...formik.getFieldProps('customerPaymentType')}
+                  {...formik.getFieldProps("customerPaymentType")}
                   options={MOCK_OPTIONS_PAYMENTS_TYPE}
                   label="Tipo do pagamento"
                   placeholder="Selecione o tipo de pagamento"
@@ -127,7 +148,7 @@ export const ActionInventoryTemplate = () => {
             <label>Estoque</label>
             <AutoCompleteInput
               setItem={(inventoryId: string) =>
-                formik.setFieldValue('inventoryId', inventoryId)
+                formik.setFieldValue("inventoryId", inventoryId)
               }
               value={autoCompleteValue}
               setValue={setAutoCompleteValue}
@@ -137,9 +158,19 @@ export const ActionInventoryTemplate = () => {
             <Input
               placeholder="Escolha a quantidade"
               label="Quantidade"
-              type={'number'}
+              type={"number"}
               error={formik.errors?.quantity as string}
-              {...formik.getFieldProps('quantity')}
+              {...formik.getFieldProps("quantity")}
+            />
+            <Input
+              label="Preço"
+              error={formik.errors?.price as string}
+              {...formik.getFieldProps("price")}
+              placeholder="Digite o preço"
+              onChange={(e) => {
+                const formattedValue = convertRealToQuantity(e.target.value);
+                formik.setFieldValue("price", formattedValue);
+              }}
             />
             <Button
               className="!w-[250px] mx-auto flex"
