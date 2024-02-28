@@ -50,6 +50,8 @@ export const Button = ({
     [ButtonSizeVariant.Auto]: 'w-full py-4 ',
   };
 
+  console.log('', isLoading);
+
   return (
     <button
       className={clsx(
@@ -61,11 +63,11 @@ export const Button = ({
       disabled={disabled}
       {...props}
     >
-      {leftIcon && !isLoading}
+      {!isLoading && leftIcon}
 
       {isLoading ? <Spinner /> : children}
 
-      {rightIcon && !isLoading}
+      {!isLoading && rightIcon}
     </button>
   );
 };

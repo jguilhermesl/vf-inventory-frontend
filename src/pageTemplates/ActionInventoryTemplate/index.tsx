@@ -145,16 +145,18 @@ export const ActionInventoryTemplate = () => {
               error={formik.errors?.quantity as string}
               {...formik.getFieldProps('quantity')}
             />
-            <Input
-              label="Preço"
-              error={formik.errors?.price as string}
-              {...formik.getFieldProps('price')}
-              placeholder="Digite o preço"
-              onChange={(e) => {
-                const formattedValue = convertRealToQuantity(e.target.value);
-                formik.setFieldValue('price', formattedValue);
-              }}
-            />
+            {formik.values.type === 'output' && (
+              <Input
+                label="Preço"
+                error={formik.errors?.price as string}
+                {...formik.getFieldProps('price')}
+                placeholder="Digite o preço"
+                onChange={(e) => {
+                  const formattedValue = convertRealToQuantity(e.target.value);
+                  formik.setFieldValue('price', formattedValue);
+                }}
+              />
+            )}
             <Button
               className="!w-[250px] mx-auto flex"
               leftIcon={<CheckCircle size={16} color="#FFF" />}

@@ -25,6 +25,7 @@ import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
 import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
 import { formatDDMMYYYYToDate } from '@/utils/formatDDMMYYYYToDate';
 import { sortItems } from '@/utils/sortItems';
+import Swal from 'sweetalert2';
 
 const ITEMS_SORT = ['validity', 'quantity'];
 
@@ -68,7 +69,6 @@ export const InventoryTemplate = () => {
   const handleEditInventory = async (values: IEditInventoryBody) => {
     setIsLoading(true);
     try {
-      console.log('==> ', formatDDMMYYYYToDate(values.validity).toString());
       await editInventory(
         {
           ...values,
@@ -117,15 +117,29 @@ export const InventoryTemplate = () => {
   };
 
   const handleDeleteItem = async (inventoryId: string) => {
-    setIsLoading(true);
     try {
-      await deleteInventory(inventoryId);
+      Swal.fire({
+        title: 'Você tem certeza?',
+        text: 'Essa ação é irreversível!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, deletar!',
+        cancelButtonText: 'Cancelar',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          setIsLoading(true);
+          await deleteInventory(inventoryId);
+          handleToast('Estoque deletado com sucesso.', 'success');
+          handleFetchInventory();
+          setIsLoading(false);
+        }
+      });
     } catch (err) {
-      console.log(err);
+      console.error('Erro ao exibir pop-up de confirmação:', err);
     } finally {
-      handleFetchInventory();
       setIsLoading(false);
-      handleToast('Estoque deletado com sucesso.', 'success');
     }
   };
 
