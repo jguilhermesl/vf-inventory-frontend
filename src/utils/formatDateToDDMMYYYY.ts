@@ -1,9 +1,9 @@
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 export function formatDateToDDMMYYYY(date) {
   if (!date) {
-    return ""
+    return "";
   }
 
-  return format(new Date(date), 'dd/MM/yyyy');
+  return format(new Date(date), "dd/MM/yyyy hh:mm");
 }
