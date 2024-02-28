@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import "jspdf-autotable";
+import React, { useCallback, useEffect, useState } from 'react';
+import 'jspdf-autotable';
 import {
+  ArrowCircleUp,
+  ArrowsDownUp,
   CaretLeft,
   CaretRight,
   FileCsv,
@@ -8,23 +10,23 @@ import {
   MagnifyingGlass,
   PencilLine,
   Trash,
-} from "phosphor-react";
-import { Line } from "./Line";
-import { Paragraph, ParagraphSizeVariant } from "./Paragraph";
-import { ReactNode } from "react";
-import { Input } from "./Input";
-import clsx from "clsx";
-import { convertCamelCaseToWordsAndTranslate } from "@/utils/convertCamelCaseToWords";
-import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
-import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
-import { Spinner } from "./Spinner";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
-import { Button } from "./Button";
-import { convertFormatValidity } from "@/utils/convertFormatValidity";
-import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
-import { useDebounce } from "@/hooks/useDebouce";
-import { getDifferenceDays } from "@/utils/getDifferenceDays";
-import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
+} from 'phosphor-react';
+import { Line } from './Line';
+import { Paragraph, ParagraphSizeVariant } from './Paragraph';
+import { ReactNode } from 'react';
+import { Input } from './Input';
+import clsx from 'clsx';
+import { convertCamelCaseToWordsAndTranslate } from '@/utils/convertCamelCaseToWords';
+import { handleGenerateExcel } from '@/utils/handleGenerateExcel';
+import { handleGeneratePDF } from '@/utils/handleGeneratePDF';
+import { Spinner } from './Spinner';
+import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
+import { Button } from './Button';
+import { convertFormatValidity } from '@/utils/convertFormatValidity';
+import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
+import { useDebounce } from '@/hooks/useDebouce';
+import { getDifferenceDays } from '@/utils/getDifferenceDays';
+import { getPaymentMethodLabel } from '@/utils/getPaymentMethodLabel';
 
 interface ITableProps {
   content: any[];
@@ -40,27 +42,31 @@ interface ITableProps {
   isLoading?: boolean;
   totalPage: number;
   handleGetItemsWithSearch?: (search: string, page: number) => Promise<void>;
+  itemsSort?: string[];
+  handleSortItems?: (title: string) => void;
 }
 
 export const Table = ({
-  content,
+  content = [],
   handleDeleteItem,
   handleEditItem,
   disableDeleteItem,
   disableEditItem,
-  emptyMessage = "Não foi encontrado nenhum dado.",
+  emptyMessage = 'Não foi encontrado nenhum dado.',
   disableActions,
   tableTitle,
   isLoading,
   totalPage,
   handleGetItemsWithSearch = async () => {},
+  itemsSort = [],
+  handleSortItems,
 }: ITableProps) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearch = useDebounce(search, 1000);
 
   const titles = content[0]
-    ? Object.keys(content[0]).filter((item) => item != "id")
+    ? Object.keys(content[0]).filter((item) => item != 'id')
     : [];
 
   const columnsQuantity = titles.length;
@@ -80,6 +86,7 @@ export const Table = ({
     }
     setCurrentPage(currentPage + 1);
   };
+
   const prevPage = () => {
     if (currentPage <= 1) {
       return;
@@ -139,9 +146,21 @@ export const Table = ({
                           className={`flex justify-start min-w-[180px]`}
                           style={{ width: calculateWidthSize() }}
                         >
-                          <Paragraph className="!font-bold !text-base">
-                            {convertCamelCaseToWordsAndTranslate(title)}
-                          </Paragraph>
+                          {itemsSort.includes(title) ? (
+                            <button
+                              className="flex items-center gap-1"
+                              onClick={() => handleSortItems(title)}
+                            >
+                              <Paragraph className="!font-bold !text-base">
+                                {convertCamelCaseToWordsAndTranslate(title)}
+                              </Paragraph>
+                              <ArrowsDownUp size={20} color="#000" />
+                            </button>
+                          ) : (
+                            <Paragraph className="!font-bold !text-base">
+                              {convertCamelCaseToWordsAndTranslate(title)}
+                            </Paragraph>
+                          )}
                         </th>
                       );
                     })}
@@ -166,23 +185,23 @@ export const Table = ({
                         >
                           {(() => {
                             switch (title) {
-                              case "type":
+                              case 'type':
                                 return (
                                   <Paragraph
                                     className={clsx(
-                                      "flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1",
+                                      'flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1',
                                       {
-                                        "bg-red-400": item[title] === "output",
-                                        "bg-green-400": item[title] === "input",
+                                        'bg-red-400': item[title] === 'output',
+                                        'bg-green-400': item[title] === 'input',
                                       }
                                     )}
                                   >
-                                    {item[title] === "output" && "Saída"}
-                                    {item[title] === "input" && "Entrada"}
+                                    {item[title] === 'output' && 'Saída'}
+                                    {item[title] === 'input' && 'Entrada'}
                                   </Paragraph>
                                 );
 
-                              case "price":
+                              case 'price':
                                 const priceValue = parseFloat(item[title]);
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
@@ -193,7 +212,7 @@ export const Table = ({
                                   </Paragraph>
                                 );
 
-                              case "validity":
+                              case 'validity':
                                 const originalValidity = item[title];
                                 const formattedValidity =
                                   formatDateToDDMMYYYY(originalValidity);
@@ -203,13 +222,13 @@ export const Table = ({
                                 return (
                                   <Paragraph
                                     className={clsx(
-                                      "flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1",
+                                      'flex items-center rounded text-center text-xs justify-center text-white uppercase font-bold w-[80px] py-1',
                                       {
-                                        "bg-red-400": daysDifference <= 5,
-                                        "bg-yellow-400":
+                                        'bg-red-400': daysDifference <= 5,
+                                        'bg-yellow-400':
                                           daysDifference >= 6 &&
                                           daysDifference <= 20,
-                                        "bg-green-400": daysDifference > 20,
+                                        'bg-green-400': daysDifference > 20,
                                       }
                                     )}
                                   >
@@ -217,7 +236,7 @@ export const Table = ({
                                   </Paragraph>
                                 );
 
-                              case "createdAt":
+                              case 'createdAt':
                                 const originalCreated = item[title];
                                 const formattedCreated =
                                   formatDateToDDMMYYYY(originalCreated);
@@ -225,7 +244,7 @@ export const Table = ({
                                   <Paragraph>{formattedCreated} </Paragraph>
                                 );
 
-                              case "customerPaymentType":
+                              case 'customerPaymentType':
                                 const chosenMethod = item[title];
                                 const paymentMethod =
                                   getPaymentMethodLabel(chosenMethod);
@@ -239,7 +258,7 @@ export const Table = ({
                               default:
                                 return (
                                   <Paragraph className="!text-base">
-                                    {item[title] ?? "-"}
+                                    {item[title] ?? '-'}
                                   </Paragraph>
                                 );
                             }
