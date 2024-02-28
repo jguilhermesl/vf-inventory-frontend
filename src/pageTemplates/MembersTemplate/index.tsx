@@ -1,21 +1,22 @@
-import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
-import { Heading } from "@/components/Heading";
-import { Table } from "@/components/Table";
-import { Paragraph } from "@/components/Paragraph";
-import { Button } from "@/components/Button";
-import { useCallback, useEffect, useState } from "react";
-import { PlusCircle } from "phosphor-react";
-import { ModalAddMember } from "@/components/layouts/modals/ModalAddMembers";
-import { ModalEditMembers } from "@/components/layouts/modals/ModalEditMembers";
+import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
+import { Heading } from '@/components/Heading';
+import { Table } from '@/components/Table';
+import { Paragraph } from '@/components/Paragraph';
+import { Button } from '@/components/Button';
+import { useCallback, useEffect, useState } from 'react';
+import { PlusCircle } from 'phosphor-react';
+import { ModalAddMember } from '@/components/layouts/modals/ModalAddMembers';
+import { ModalEditMembers } from '@/components/layouts/modals/ModalEditMembers';
 import {
   ICreateUserBody,
   deleteUser,
   editUser,
   fetchAllUsers,
   addUser,
-} from "@/api/user";
-import { handleToast } from "@/utils/handleToast";
-import { IEditMember, IUserData } from "@/@types/user";
+} from '@/api/user';
+import { handleToast } from '@/utils/handleToast';
+import { IEditMember, IUserData } from '@/@types/user';
+import Swal from 'sweetalert2';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState([]);
@@ -36,14 +37,14 @@ export const MembersTemplate = () => {
     setIsLoading(true);
     try {
       await addUser({ name, password, role, email });
-      handleToast("Membro adicionado com sucesso.", "success");
+      handleToast('Membro adicionado com sucesso.', 'success');
       setModalAddMemberIsOpen(false);
     } catch (err) {
       if (err.response.data.err) {
-        handleToast(err.response.data.err, "error");
+        handleToast(err.response.data.err, 'error');
         return;
       }
-      handleToast("Erro ao adicionar membro.", "error");
+      handleToast('Erro ao adicionar membro.', 'error');
     } finally {
       setIsLoading(false);
       handleFetchMembers();
@@ -61,13 +62,13 @@ export const MembersTemplate = () => {
     try {
       await editUser(values, currentMember.id);
       await handleFetchMembers();
-      handleToast("Membro editado com sucesso.", "success");
+      handleToast('Membro editado com sucesso.', 'success');
     } catch (err) {
       if (err.response.data.err) {
-        handleToast(err.response.data.err, "error");
+        handleToast(err.response.data.err, 'error');
         return;
       }
-      handleToast("Erro ao editar membro.", "error");
+      handleToast('Erro ao editar membro.', 'error');
     } finally {
       setIsLoading(false);
       setModalEditMemberIsOpen(false);
@@ -79,7 +80,7 @@ export const MembersTemplate = () => {
       setIsLoading(true);
       try {
         const { users, totalPages } = await fetchAllUsers(
-          search ?? "",
+          search ?? '',
           page ?? 1
         );
         setMembers(users);
@@ -98,14 +99,28 @@ export const MembersTemplate = () => {
   }, []);
 
   const handleDeleteItem = async (userId: string) => {
-    setIsLoading(true);
     try {
-      await deleteUser(userId);
-      handleToast("Membro deletado com sucesso.", "success");
+      Swal.fire({
+        title: 'Você tem certeza?',
+        text: 'Essa ação é irreversível!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, deletar!',
+        cancelButtonText: 'Cancelar',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          setIsLoading(true);
+          await deleteUser(userId);
+          handleToast('Membro deletado com sucesso.', 'success');
+          setIsLoading(false);
+          handleFetchMembers();
+        }
+      });
     } catch (err) {
-      handleToast("Algo aconteceu de errado.", "error");
+      handleToast('Algo aconteceu de errado.', 'error');
     } finally {
-      handleFetchMembers();
       setIsLoading(false);
     }
   };
