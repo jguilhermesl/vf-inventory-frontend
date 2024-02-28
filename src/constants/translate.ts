@@ -12,5 +12,5 @@ export const TRANSLATION = {
   name: "Nome",
   lot: "Lote",
   productName: "Produto",
-  role: "Cargo"
-}
+  role: "Cargo",
+};

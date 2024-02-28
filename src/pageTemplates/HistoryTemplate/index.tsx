@@ -8,7 +8,7 @@ import { handleToast } from "@/utils/handleToast";
 import { sortItems } from "@/utils/sortItems";
 import { useCallback, useEffect, useState } from "react";
 
-const ITEMS_SORT = ["type", "inventoryProduct", "quantity"];
+const ITEMS_SORT = ["type", "inventoryProduct", "quantity", "createdAt"];
 
 export const HistoryTemplate = () => {
   const [history, setHistory] = useState([]);
@@ -48,6 +48,8 @@ export const HistoryTemplate = () => {
         items = sortItems(history, "inventoryProduct", sortDirection, "string");
       case "quantity":
         items = sortItems(history, "quantity", sortDirection, "number");
+      case "createdAt":
+        items = sortItems(history, "createdAt", sortDirection, "date");
     }
 
     setSortDirection(sortDirection === "ASC" ? "DESC" : "ASC");
