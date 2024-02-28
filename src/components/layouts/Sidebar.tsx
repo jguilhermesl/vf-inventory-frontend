@@ -10,8 +10,8 @@ export const Sidebar = () => {
   const { pathname } = useRouter();
 
   return (
-    <aside className="h-full w-full flex-col gap-4 items-center bg-white px-6 py-8 relative hidden lg:flex border-r border-r-[#00000010]">
-      <Logo className="hidden lg:flex" />
+    <aside className="h-full w-full flex-col gap-4 items-center bg-white px-6 pb-8 relative hidden lg:flex border-r border-r-[#00000010]">
+      <Logo className="hidden lg:flex py-8" />
       <Line />
       <div className="w-full flex flex-col items-center">
         <ul className="flex flex-col gap-4 mt-8">

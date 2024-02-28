@@ -37,7 +37,6 @@ export default function AuthContextProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState({} as IUserData);
 
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleSignOut = () => {
     try {
@@ -81,6 +80,7 @@ export default function AuthContextProvider({ children }: AuthProviderProps) {
             email,
             role,
           });
+          setIsAuthenticated(true);
         })
         .catch((err) => handleSignOut());
     }

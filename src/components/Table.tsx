@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "jspdf-autotable";
 import {
+  ArrowCircleUp,
+  ArrowsDownUp,
   CaretLeft,
   CaretRight,
   FileCsv,
@@ -25,6 +27,7 @@ import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 import { useDebounce } from "@/hooks/useDebouce";
 import { getDifferenceDays } from "@/utils/getDifferenceDays";
 import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
+import Swal from "sweetalert2";
 
 interface ITableProps {
   content: any[];
@@ -40,10 +43,12 @@ interface ITableProps {
   isLoading?: boolean;
   totalPage: number;
   handleGetItemsWithSearch?: (search: string, page: number) => Promise<void>;
+  itemsSort?: string[];
+  handleSortItems?: (title: string) => void;
 }
 
 export const Table = ({
-  content,
+  content = [],
   handleDeleteItem,
   handleEditItem,
   disableDeleteItem,
@@ -54,6 +59,8 @@ export const Table = ({
   isLoading,
   totalPage,
   handleGetItemsWithSearch = async () => {},
+  itemsSort = [],
+  handleSortItems,
 }: ITableProps) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,6 +87,7 @@ export const Table = ({
     }
     setCurrentPage(currentPage + 1);
   };
+
   const prevPage = () => {
     if (currentPage <= 1) {
       return;
@@ -139,9 +147,21 @@ export const Table = ({
                           className={`flex justify-start min-w-[180px]`}
                           style={{ width: calculateWidthSize() }}
                         >
-                          <Paragraph className="!font-bold !text-base">
-                            {convertCamelCaseToWordsAndTranslate(title)}
-                          </Paragraph>
+                          {itemsSort.includes(title) ? (
+                            <button
+                              className="flex items-center gap-1"
+                              onClick={() => handleSortItems(title)}
+                            >
+                              <Paragraph className="!font-bold !text-base">
+                                {convertCamelCaseToWordsAndTranslate(title)}
+                              </Paragraph>
+                              <ArrowsDownUp size={20} color="#000" />
+                            </button>
+                          ) : (
+                            <Paragraph className="!font-bold !text-base">
+                              {convertCamelCaseToWordsAndTranslate(title)}
+                            </Paragraph>
+                          )}
                         </th>
                       );
                     })}
