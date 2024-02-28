@@ -18,6 +18,7 @@ import { Table } from "@/components/Table";
 import { handleToast } from "@/utils/handleToast";
 import { PlusCircle } from "phosphor-react";
 import { useCallback, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export const ProductsTemplate = () => {
   const [modalAddProductIsOpen, setModalAddProductIsOpen] = useState(false);
@@ -50,20 +51,43 @@ export const ProductsTemplate = () => {
       setModalEditProductIsOpen(false);
     }
   };
-
   const handleDeleteItem = async (productId: string) => {
     setIsLoading(true);
     try {
-      await deleteProduct(productId);
+      Swal.fire({
+        title: "Você tem certeza?",
+        text: "Essa ação é irreversível!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, deletar!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteProduct(productId);
+          handleToast("Produto deletado com sucesso.", "success");
+        }
+      });
     } catch (err) {
       console.log(err);
     } finally {
       handleFetchProducts();
       setIsLoading(false);
-      handleToast("Produto deletado com sucesso.", "success");
     }
+    //
+    //   handleToast("Produto deletado com sucesso.", "success");
+    // }
+    // try {
+    //   // await deleteProduct(productId);
+    //   await SWALTESTE;
+    // } catch (err) {
+    //   console.log(err);
+    // } finally {
+    //   handleFetchProducts();
+    //   setIsLoading(false);
+    //   handleToast("Produto deletado com sucesso.", "success");
+    // }
   };
-
   const handleAddProduct = async ({ name, sigla }: IAddProductBody) => {
     setIsLoading(true);
     try {
@@ -101,6 +125,22 @@ export const ProductsTemplate = () => {
     handleFetchProducts();
   }, []);
 
+  const SWALTESTE = () => {
+    Swal.fire({
+      title: "Você tem certeza?",
+      text: "Essa ação é irreversível!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleToast("Produto deletado com sucesso.", "success");
+      }
+    });
+  };
+
   return (
     <>
       <LayoutWithSidebar>
@@ -118,6 +158,7 @@ export const ProductsTemplate = () => {
               Adicionar produto
             </Button>
           </div>
+
           <Table
             content={products}
             handleEditItem={handleOpenEditProduct}

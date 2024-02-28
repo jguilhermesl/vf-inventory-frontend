@@ -1,36 +1,36 @@
-import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
-import { Heading } from '@/components/Heading';
-import { Table } from '@/components/Table';
-import { Paragraph } from '@/components/Paragraph';
-import { Button } from '@/components/Button';
-import { useCallback, useEffect, useState } from 'react';
-import { PlusCircle } from 'phosphor-react';
-import { ModalAddInventory } from '../../components/layouts/modals/ModalAddInventory';
-import { ModalEditInventory } from '@/components/layouts/modals/ModalEditInventory';
+import { LayoutWithSidebar } from "@/components/layouts/LayoutWithSidebar";
+import { Heading } from "@/components/Heading";
+import { Table } from "@/components/Table";
+import { Paragraph } from "@/components/Paragraph";
+import { Button } from "@/components/Button";
+import { useCallback, useEffect, useState } from "react";
+import { PlusCircle } from "phosphor-react";
+import { ModalAddInventory } from "../../components/layouts/modals/ModalAddInventory";
+import { ModalEditInventory } from "@/components/layouts/modals/ModalEditInventory";
 import {
   addInventory,
   deleteInventory,
   fetchInventory,
   editInventory,
-} from '@/api/inventory';
-import { handleToast } from '@/utils/handleToast';
-import { formatCurrencyToFloat } from '@/utils/formatCurrencyToFloat';
+} from "@/api/inventory";
+import { handleToast } from "@/utils/handleToast";
+import { formatCurrencyToFloat } from "@/utils/formatCurrencyToFloat";
 import {
   IAddInventoryBody,
   IEditInventoryBody,
   IInventoryModel,
-} from '@/@types/inventory';
+} from "@/@types/inventory";
 
-import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
-import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
-import { formatDDMMYYYYToDate } from '@/utils/formatDDMMYYYYToDate';
-import { sortItems } from '@/utils/sortItems';
+import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { formatDDMMYYYYToDate } from "@/utils/formatDDMMYYYYToDate";
+import { sortItems } from "@/utils/sortItems";
 
-const ITEMS_SORT = ['validity', 'quantity'];
+const ITEMS_SORT = ["validity", "quantity"];
 
 export const InventoryTemplate = () => {
   const [inventory, setInventory] = useState([]);
-  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
+  const [sortDirection, setSortDirection] = useState<"ASC" | "DESC">("DESC");
   const [modalAddInventoryIsOpen, setModalAddInventoryIsOpen] = useState(false);
   const [modalEditInventoryIsOpen, setModalEditInventoryIsOpen] =
     useState(false);
@@ -45,7 +45,7 @@ export const InventoryTemplate = () => {
       setIsLoading(true);
       try {
         const { inventory, totalPages } = await fetchInventory(
-          search ?? '',
+          search ?? "",
           page ?? 1
         );
         setInventory(inventory);
@@ -68,7 +68,7 @@ export const InventoryTemplate = () => {
   const handleEditInventory = async (values: IEditInventoryBody) => {
     setIsLoading(true);
     try {
-      console.log('==> ', formatDDMMYYYYToDate(values.validity).toString());
+      console.log("==> ", formatDDMMYYYYToDate(values.validity).toString());
       await editInventory(
         {
           ...values,
@@ -77,13 +77,13 @@ export const InventoryTemplate = () => {
         currentInventory.id
       );
       await handleFetchInventory();
-      handleToast('Estoque editado com sucesso.', 'success');
+      handleToast("Estoque editado com sucesso.", "success");
     } catch (err) {
       if (err.response.data.err) {
-        handleToast(err.response.data.err, 'error');
+        handleToast(err.response.data.err, "error");
         return;
       }
-      handleToast('Erro ao editar membro.', 'error');
+      handleToast("Erro ao editar membro.", "error");
     } finally {
       setIsLoading(false);
       setModalEditInventoryIsOpen(false);
@@ -106,11 +106,11 @@ export const InventoryTemplate = () => {
         quantity,
         validity: formatDateToDDMMYYYY(validity),
       });
-      handleToast('Estoque adicionado com sucesso.', 'success');
+      handleToast("Estoque adicionado com sucesso.", "success");
       setModalAddInventoryIsOpen(false);
       handleFetchInventory();
     } catch (err) {
-      handleToast('Algo aconteceu de errado.', 'error');
+      handleToast("Algo aconteceu de errado.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -121,11 +121,11 @@ export const InventoryTemplate = () => {
     try {
       await deleteInventory(inventoryId);
     } catch (err) {
-      console.log(err);
+      console.error("Erro ao exibir pop-up de confirmação:", err);
     } finally {
       handleFetchInventory();
       setIsLoading(false);
-      handleToast('Estoque deletado com sucesso.', 'success');
+      handleToast("Estoque deletado com sucesso.", "success");
     }
   };
 
@@ -133,14 +133,14 @@ export const InventoryTemplate = () => {
     let items = [];
 
     switch (title) {
-      case 'quantity':
-        items = sortItems(inventory, 'quantity', sortDirection, 'number');
+      case "quantity":
+        items = sortItems(inventory, "quantity", sortDirection, "number");
 
-      case 'validity':
-        items = sortItems(inventory, 'validity', sortDirection, 'date');
+      case "validity":
+        items = sortItems(inventory, "validity", sortDirection, "date");
     }
 
-    setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+    setSortDirection(sortDirection === "ASC" ? "DESC" : "ASC");
 
     setInventory(items);
   };
