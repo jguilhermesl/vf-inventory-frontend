@@ -17,6 +17,7 @@ import {
 import { handleToast } from '@/utils/handleToast';
 import { IEditMember, IUserData } from '@/@types/user';
 import Swal from 'sweetalert2';
+import { useAuth } from '@/hooks/useAuth';
 
 export const MembersTemplate = () => {
   const [members, setMembers] = useState([]);
@@ -27,6 +28,8 @@ export const MembersTemplate = () => {
     {} as IUserData
   );
   const [isLoading, setIsLoading] = useState(true);
+
+  const { isAuthenticated } = useAuth();
 
   const handleAddMember = async ({
     name,
@@ -96,7 +99,7 @@ export const MembersTemplate = () => {
 
   useEffect(() => {
     handleFetchMembers();
-  }, []);
+  }, [handleFetchMembers, isAuthenticated]);
 
   const handleDeleteItem = async (userId: string) => {
     try {

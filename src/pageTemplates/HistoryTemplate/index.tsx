@@ -3,6 +3,7 @@ import { Heading } from '@/components/Heading';
 import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
 import { Paragraph } from '@/components/Paragraph';
 import { Table } from '@/components/Table';
+import { useAuth } from '@/hooks/useAuth';
 import { handleToast } from '@/utils/handleToast';
 import { sortItems } from '@/utils/sortItems';
 import { useCallback, useEffect, useState } from 'react';
@@ -14,6 +15,8 @@ export const HistoryTemplate = () => {
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+
+  const { isAuthenticated } = useAuth();
 
   const handleFetchHistory = useCallback(
     async (search?: string, page?: number) => {
@@ -52,7 +55,7 @@ export const HistoryTemplate = () => {
 
   useEffect(() => {
     handleFetchHistory();
-  }, [handleFetchHistory]);
+  }, [handleFetchHistory, isAuthenticated]);
 
   return (
     <>

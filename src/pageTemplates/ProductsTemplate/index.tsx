@@ -1,5 +1,4 @@
 import { IEditProduct, IProductModel } from '@/@types/product';
-import { IEditMember } from '@/@types/user';
 import {
   addProduct,
   deleteProduct,
@@ -7,7 +6,6 @@ import {
   fetchProducts,
   IAddProductBody,
 } from '@/api/products';
-import { editUser } from '@/api/user';
 import { Button } from '@/components/Button';
 import { Heading } from '@/components/Heading';
 import { LayoutWithSidebar } from '@/components/layouts/LayoutWithSidebar';
@@ -15,6 +13,7 @@ import { ModalAddProduct } from '@/components/layouts/modals/ModalAddProduct';
 import { ModalEditProduct } from '@/components/layouts/modals/ModalEditProduct';
 import { Paragraph } from '@/components/Paragraph';
 import { Table } from '@/components/Table';
+import { useAuth } from '@/hooks/useAuth';
 import { handleToast } from '@/utils/handleToast';
 import { PlusCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,6 +26,8 @@ export const ProductsTemplate = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+
+  const { isAuthenticated } = useAuth();
 
   const handleOpenEditProduct = (productId: string) => {
     const item = products.find((product) => product.id == productId);
@@ -114,23 +115,7 @@ export const ProductsTemplate = () => {
 
   useEffect(() => {
     handleFetchProducts();
-  }, []);
-
-  const SWALTESTE = () => {
-    Swal.fire({
-      title: 'Você tem certeza?',
-      text: 'Essa ação é irreversível!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sim, deletar!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleToast('Produto deletado com sucesso.', 'success');
-      }
-    });
-  };
+  }, [handleFetchProducts, isAuthenticated]);
 
   return (
     <>

@@ -26,6 +26,7 @@ import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
 import { formatDDMMYYYYToDate } from '@/utils/formatDDMMYYYYToDate';
 import { sortItems } from '@/utils/sortItems';
 import Swal from 'sweetalert2';
+import { useAuth } from '@/hooks/useAuth';
 
 const ITEMS_SORT = ['validity', 'quantity'];
 
@@ -40,6 +41,8 @@ export const InventoryTemplate = () => {
   const [currentInventory, setCurrentInventory] = useState(
     {} as IInventoryModel
   );
+
+  const { isAuthenticated } = useAuth();
 
   const handleFetchInventory = useCallback(
     async (search?: string, page?: number) => {
@@ -161,7 +164,7 @@ export const InventoryTemplate = () => {
 
   useEffect(() => {
     handleFetchInventory();
-  }, [handleFetchInventory]);
+  }, [handleFetchInventory, isAuthenticated]);
 
   return (
     <>
