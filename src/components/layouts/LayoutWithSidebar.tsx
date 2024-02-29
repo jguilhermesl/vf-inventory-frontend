@@ -16,7 +16,7 @@ type Props = {
 
 export const LayoutWithSidebar = ({
   children,
-  title = 'This is the default title',
+  title = 'Vinicius Frios - Controle de Estoque',
 }: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
