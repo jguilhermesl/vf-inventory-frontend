@@ -49,12 +49,14 @@ export const ActionInventoryTemplate = () => {
       const customerPaymentType =
         values.type === 'output' ? values.customerPaymentType : null;
 
+      console.log('==> ', values.price);
+
       const data: IActionInventoryBody = {
         type: values.type,
         customerName,
         customerPaymentType,
         quantity: values.quantity,
-        price: handleRemoveMask(values.price),
+        price: values.price,
       };
 
       formik.resetForm();
