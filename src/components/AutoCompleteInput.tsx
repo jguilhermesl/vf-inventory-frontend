@@ -1,12 +1,12 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Input } from '@/components/Input';
-import { MagnifyingGlass } from 'phosphor-react';
-import { memo } from 'react';
-import clsx from 'clsx';
-import { Spinner } from './Spinner';
-import { Line } from './Line';
-import { convertRealToQuantity } from '@/utils/convertRealToQuantity';
-import { formatDateToDDMMYYYY } from '@/utils/formatDateToDDMMYYYY';
+import { Dispatch, SetStateAction, useState } from "react";
+import { Input } from "@/components/Input";
+import { MagnifyingGlass } from "phosphor-react";
+import { memo } from "react";
+import clsx from "clsx";
+import { Spinner } from "./Spinner";
+import { Line } from "./Line";
+import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 
 interface IAutoCompleteItemProps {
   suggestions: any[];
@@ -33,10 +33,10 @@ const AutoCompleteItem = memo(
     return (
       <div
         className={clsx(
-          'bg-white max-h-[200px] w-[400px] overflow-auto rounded transition-all',
+          "bg-white max-h-[200px] w-[400px] overflow-auto rounded transition-all",
           {
-            'h-0': !isOpenSuggestions,
-            'border border-neutral-grey': isOpenSuggestions,
+            "h-0": !isOpenSuggestions,
+            "border border-neutral-grey": isOpenSuggestions,
           }
         )}
       >
@@ -57,7 +57,7 @@ const AutoCompleteItem = memo(
                   (item?.productName &&
                     `${item?.product || item?.productName} | `)}
                 {item?.price &&
-                  `${convertRealToQuantity(item?.price?.toString())} | `}
+                  `${convertRealToQuantity((item?.price * 100).toString())} | `}
                 {item?.validity && formatDateToDDMMYYYY(item?.validity)}
                 <Line className="mt-2" />
               </li>
@@ -77,28 +77,28 @@ export const AutoCompleteInput = ({
   setValue,
 }: IAutoCompleteInputProps) => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
-  const [autoCompleteValue, setAutoCompleteValue] = useState('');
+  const [autoCompleteValue, setAutoCompleteValue] = useState("");
 
   const handleClickProduct = (itemId: string) => {
     const itemFiltered = suggestions.find((p) => p.id == itemId);
     const formattedString =
-      `${itemFiltered?.name ? `${itemFiltered.name} | ` : ''}` +
-      `${itemFiltered?.sigla ? `${itemFiltered.sigla} ` : ''}` +
-      `${itemFiltered?.lot ? `${itemFiltered.lot} | ` : ''}` +
+      `${itemFiltered?.name ? `${itemFiltered.name} | ` : ""}` +
+      `${itemFiltered?.sigla ? `${itemFiltered.sigla} ` : ""}` +
+      `${itemFiltered?.lot ? `${itemFiltered.lot} | ` : ""}` +
       `${
         itemFiltered?.product || itemFiltered?.productName
           ? `${itemFiltered?.product || itemFiltered?.productName} | `
-          : ''
+          : ""
       }` +
       `${
         itemFiltered?.price
           ? `${convertRealToQuantity(itemFiltered?.price?.toString())} | `
-          : ''
+          : ""
       }` +
       `${
         itemFiltered?.validity
           ? formatDateToDDMMYYYY(itemFiltered?.validity)
-          : ''
+          : ""
       }`;
 
     setAutoCompleteValue(formattedString);
