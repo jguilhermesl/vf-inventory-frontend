@@ -1,4 +1,4 @@
-export const convertRealToQuantity = (value) => {
+export const convertQuantityToReal = (value) => {
   if (!value) {
     return "";
   }
@@ -11,5 +11,6 @@ export const convertRealToQuantity = (value) => {
     style: "currency",
     currency: "BRL",
   });
+
   return formattedValue;
 };

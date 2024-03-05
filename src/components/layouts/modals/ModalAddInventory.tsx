@@ -13,7 +13,7 @@ import {
   useState,
 } from "react";
 import { AutoCompleteInput } from "@/components/AutoCompleteInput";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { fetchProducts } from "@/api/products";
 import { IAddInventoryBody } from "@/@types/inventory";
@@ -113,7 +113,7 @@ export const ModalAddInventory = ({
               {...formik.getFieldProps("price")}
               placeholder="R$"
               onChange={(e) => {
-                const formattedValue = convertRealToQuantity(e.target.value);
+                const formattedValue = convertQuantityToReal(e.target.value);
                 formik.setFieldValue("price", formattedValue);
               }}
             />
