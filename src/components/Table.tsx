@@ -20,7 +20,7 @@ import { convertCamelCaseToWordsAndTranslate } from "@/utils/convertCamelCaseToW
 import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
 import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
 import { Spinner } from "./Spinner";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { Button } from "./Button";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
@@ -207,7 +207,7 @@ export const Table = ({
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
                                   <Paragraph className="!text-base">
-                                    {convertRealToQuantity(
+                                    {convertQuantityToReal(
                                       formattedPrice.toString()
                                     )}
                                   </Paragraph>
