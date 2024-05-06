@@ -5,5 +5,5 @@ export function formatDateToDDMMYYYY(date) {
     return "";
   }
 
-  return format(new Date(date), "dd/MM/yyyy hh:mm");
+  return format(new Date(date), "dd/MM/yyyy");
 }

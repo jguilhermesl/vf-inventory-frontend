@@ -28,6 +28,7 @@ import { useDebounce } from "@/hooks/useDebouce";
 import { getDifferenceDays } from "@/utils/getDifferenceDays";
 import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
 import Swal from "sweetalert2";
+import { formatDateToDDMMYYYYhhmm } from "@/utils/formatDateToDDMMYYYYhhmm";
 
 interface ITableProps {
   content: any[];
@@ -240,7 +241,7 @@ export const Table = ({
                               case "createdAt":
                                 const originalCreated = item[title];
                                 const formattedCreated =
-                                  formatDateToDDMMYYYY(originalCreated);
+                                  formatDateToDDMMYYYYhhmm(originalCreated);
                                 return (
                                   <Paragraph>{formattedCreated} </Paragraph>
                                 );
