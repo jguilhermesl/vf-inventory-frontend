@@ -5,15 +5,9 @@ import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
 import { addInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
 import { CheckCircle, XCircle } from "phosphor-react";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { AutoCompleteInput } from "@/components/AutoCompleteInput";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { fetchProducts } from "@/api/products";
 import { IAddInventoryBody } from "@/@types/inventory";
@@ -21,7 +15,7 @@ import { IAddInventoryBody } from "@/@types/inventory";
 interface IModalAddProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   modalIsOpen: boolean;
-  handleAddInventory: (values: IAddInventoryBody) => Promise<void>;
+  handleAddInventory: (values: IAddInventoryBody, resetForm) => Promise<void>;
 }
 
 export const ModalAddInventory = ({
@@ -59,16 +53,7 @@ export const ModalAddInventory = ({
     },
     validateOnBlur: true,
     validationSchema: addInventorySchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      try {
-        await handleAddInventory(values);
-        formik.resetForm();
-        setSubmitting(false);
-      } catch (error) {
-        console.error("Erro ao adicionar estoque:", error);
-        setSubmitting(false);
-      }
-    },
+    onSubmit: (values) => handleAddInventory(values, formik.resetForm),
   });
 
   return (
@@ -113,7 +98,7 @@ export const ModalAddInventory = ({
               {...formik.getFieldProps("price")}
               placeholder="R$"
               onChange={(e) => {
-                const formattedValue = convertRealToQuantity(e.target.value);
+                const formattedValue = convertQuantityToReal(e.target.value);
                 formik.setFieldValue("price", formattedValue);
               }}
             />

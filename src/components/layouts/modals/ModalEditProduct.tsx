@@ -1,12 +1,12 @@
-import { IEditProduct } from '@/@types/product';
-import { Button, ButtonVariant } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Modal } from '@/components/Modal';
-import { Paragraph, ParagraphSizeVariant } from '@/components/Paragraph';
-import { editProductSchema } from '@/validation/products';
-import { useFormik } from 'formik';
-import { CheckCircle, XCircle } from 'phosphor-react';
-import { Dispatch, SetStateAction } from 'react';
+import { IEditProduct } from "@/@types/product";
+import { Button, ButtonVariant } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Modal } from "@/components/Modal";
+import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
+import { editProductSchema } from "@/validation/products";
+import { useFormik } from "formik";
+import { CheckCircle, XCircle } from "phosphor-react";
+import { Dispatch, SetStateAction } from "react";
 
 interface ModalEditProductProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -56,13 +56,13 @@ export const ModalEditProduct = ({
               label="Nome"
               value={currentProduct.name}
               error={formik.errors?.name as string}
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps("name")}
             />
             <Input
               label="Sigla"
               value={currentProduct.sigla}
               error={formik.errors?.sigla as string}
-              {...formik.getFieldProps('sigla')}
+              {...formik.getFieldProps("sigla")}
             />
             <Button
               className="w-[220px] mx-auto !text-sm"
