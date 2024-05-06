@@ -4,13 +4,12 @@ import { Modal } from "@/components/Modal";
 import { Paragraph, ParagraphSizeVariant } from "@/components/Paragraph";
 import { CheckCircle, XCircle } from "phosphor-react";
 import { Dispatch, SetStateAction } from "react";
-import { Dropdown } from "@/components/Dropdown";
 import { useFormik } from "formik";
 import { IEditInventoryBody } from "@/@types/inventory";
 import { editInventorySchema } from "@/validation/inventory";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 
 interface IModalEditInventoryProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -88,7 +87,7 @@ export const ModalEditInventory = ({
               {...formik.getFieldProps("price")}
               placeholder="R$"
               onChange={(e) => {
-                const formattedValue = convertRealToQuantity(e.target.value);
+                const formattedValue = convertQuantityToReal(e.target.value);
                 formik.setFieldValue("price", formattedValue);
               }}
             />

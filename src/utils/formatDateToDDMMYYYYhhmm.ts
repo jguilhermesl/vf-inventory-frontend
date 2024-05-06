@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format } from "date-fns-tz";
 
 export const formatDateToDDMMYYYYhhmm = (date: string) => {
   if (!date) {
