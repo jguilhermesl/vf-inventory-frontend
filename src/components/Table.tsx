@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "jspdf-autotable";
 import {
-  ArrowCircleUp,
   ArrowsDownUp,
   CaretLeft,
   CaretRight,
@@ -20,14 +19,11 @@ import { convertCamelCaseToWordsAndTranslate } from "@/utils/convertCamelCaseToW
 import { handleGenerateExcel } from "@/utils/handleGenerateExcel";
 import { handleGeneratePDF } from "@/utils/handleGeneratePDF";
 import { Spinner } from "./Spinner";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
-import { Button } from "./Button";
-import { convertFormatValidity } from "@/utils/convertFormatValidity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 import { useDebounce } from "@/hooks/useDebouce";
 import { getDifferenceDays } from "@/utils/getDifferenceDays";
 import { getPaymentMethodLabel } from "@/utils/getPaymentMethodLabel";
-import Swal from "sweetalert2";
 import { formatDateToDDMMYYYYhhmm } from "@/utils/formatDateToDDMMYYYYhhmm";
 
 interface ITableProps {
@@ -208,7 +204,7 @@ export const Table = ({
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
                                   <Paragraph className="!text-base">
-                                    {convertRealToQuantity(
+                                    {convertQuantityToReal(
                                       formattedPrice.toString()
                                     )}
                                   </Paragraph>

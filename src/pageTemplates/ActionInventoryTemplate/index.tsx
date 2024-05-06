@@ -11,12 +11,14 @@ import {
   MOCK_OPTIONS_ACTIONS_TYPE,
   MOCK_OPTIONS_PAYMENTS_TYPE,
 } from "@/constants/inventory";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
+import { convertRealToNumber } from "@/utils/convertRealToNumber";
+import { handleRemoveMask } from "@/utils/handleRemoveMask";
 import { handleToast } from "@/utils/handleToast";
 import { actionInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
 import { CheckCircle } from "phosphor-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const ActionInventoryTemplate = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -53,19 +55,19 @@ export const ActionInventoryTemplate = () => {
         customerName,
         customerPaymentType,
         quantity: values.quantity,
-        price: values.type === "output" ? values.price : null,
+        price: convertRealToNumber(values.price),
       };
 
-      await actionInventory(data, values.inventoryId);
-      setAutoCompleteValue("");
       formik.resetForm();
+      setAutoCompleteValue("");
+      await actionInventory(data, values.inventoryId);
       handleToast("Ação realizada com sucesso.", "success");
     } catch (err) {
+      console.log(err);
       if (err.response.data.error == "Estoque não pode ficar negativo.") {
-        handleToast(err.response.data.error, "error");
+        handleToast("Estoque não pode ficar negativo.", "error");
         return;
       }
-
       handleToast("Algo deu errado.", "error");
     } finally {
       setIsLoading(false);
@@ -155,7 +157,7 @@ export const ActionInventoryTemplate = () => {
                 {...formik.getFieldProps("price")}
                 placeholder="Digite o preço"
                 onChange={(e) => {
-                  const formattedValue = convertRealToQuantity(e.target.value);
+                  const formattedValue = convertQuantityToReal(e.target.value);
                   formik.setFieldValue("price", formattedValue);
                 }}
               />

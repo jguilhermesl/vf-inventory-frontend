@@ -22,7 +22,7 @@ import {
 } from "@/@types/inventory";
 
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { formatDDMMYYYYToDate } from "@/utils/formatDDMMYYYYToDate";
 import { sortItems } from "@/utils/sortItems";
 import Swal from "sweetalert2";
@@ -75,7 +75,7 @@ export const InventoryTemplate = () => {
       await editInventory(
         {
           ...values,
-          price: formatCurrencyToFloat(convertRealToQuantity(values.price)),
+          price: formatCurrencyToFloat(convertQuantityToReal(values.price)),
           validity: formatDDMMYYYYToDate(values.validity).toString(),
         },
         currentInventory.id
@@ -102,7 +102,7 @@ export const InventoryTemplate = () => {
     try {
       await addInventory({
         lot,
-        price: formatCurrencyToFloat(convertRealToQuantity(price)),
+        price: formatCurrencyToFloat(convertQuantityToReal(price)),
         productId,
         quantity,
         validity: formatDateToDDMMYYYY(validity),
@@ -112,7 +112,6 @@ export const InventoryTemplate = () => {
       handleFetchInventory();
       resetForm();
     } catch (err) {
-      console.log(err);
       handleToast("Algo aconteceu de errado.", "error");
     } finally {
       setIsLoading(false);

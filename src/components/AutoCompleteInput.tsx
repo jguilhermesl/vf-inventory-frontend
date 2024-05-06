@@ -5,7 +5,7 @@ import { memo } from "react";
 import clsx from "clsx";
 import { Spinner } from "./Spinner";
 import { Line } from "./Line";
-import { convertRealToQuantity } from "@/utils/convertRealToQuantity";
+import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 
 interface IAutoCompleteItemProps {
@@ -57,7 +57,7 @@ const AutoCompleteItem = memo(
                   (item?.productName &&
                     `${item?.product || item?.productName} | `)}
                 {item?.price &&
-                  `${convertRealToQuantity((item?.price * 100).toString())} | `}
+                  `${convertQuantityToReal((item?.price * 100).toString())} | `}
                 {item?.validity && formatDateToDDMMYYYY(item?.validity)}
                 <Line className="mt-2" />
               </li>
@@ -92,7 +92,7 @@ export const AutoCompleteInput = ({
       }` +
       `${
         itemFiltered?.price
-          ? `${convertRealToQuantity(itemFiltered?.price?.toString())} | `
+          ? `${convertQuantityToReal(itemFiltered?.price?.toString())} | `
           : ""
       }` +
       `${
