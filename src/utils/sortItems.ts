@@ -7,8 +7,6 @@ export const sortItems = (items, key, order, type: "date" | "number" | "string")
     const itemA = getNestedPropertyValue(a, key)
     const itemB = getNestedPropertyValue(b, key)
 
-    console.log(a, b)
-
     if (type === 'number') {
       return order === 'ASC' ? itemA - itemB : itemB - itemA;
     }

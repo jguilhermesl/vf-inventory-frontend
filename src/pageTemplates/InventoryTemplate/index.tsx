@@ -27,6 +27,7 @@ import { formatDDMMYYYYToDate } from "@/utils/formatDDMMYYYYToDate";
 import { sortItems } from "@/utils/sortItems";
 import Swal from "sweetalert2";
 import { useAuth } from "@/hooks/useAuth";
+import { convertDateToAmericanFormat } from "@/utils/convertDateToAmericanFormat";
 
 const ITEMS_SORT = ["validity", "quantity"];
 
@@ -107,13 +108,14 @@ export const InventoryTemplate = () => {
         price: formatCurrencyToFloat(convertQuantityToReal(price.toString())),
         productId,
         quantity,
-        validity: formatDateToDDMMYYYY(validity),
+        validity: convertDateToAmericanFormat(formatDateToDDMMYYYY(validity)),
       });
       handleToast("Estoque adicionado com sucesso.", "success");
       setModalAddInventoryIsOpen(false);
       handleFetchInventory();
       resetForm();
     } catch (err) {
+      console.log(err);
       handleToast("Algo aconteceu de errado.", "error");
     } finally {
       setIsLoading(false);
