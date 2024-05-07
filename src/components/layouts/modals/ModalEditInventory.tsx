@@ -24,15 +24,16 @@ export const ModalEditInventory = ({
   currentInventory,
   handleEditInventory,
 }: IModalEditInventoryProps) => {
-  console.log(currentInventory);
-
   const formik = useFormik({
     isInitialValid: false,
     validateOnBlur: true,
     enableReinitialize: true,
     initialValues: {
       lot: currentInventory?.lot || "",
-      price: currentInventory?.price || "",
+      price:
+        convertQuantityToReal(
+          (currentInventory?.price * 100).toString() ?? ""
+        ) || "",
       quantity: currentInventory?.quantity || "",
       validity: formatDateToDDMMYYYY(currentInventory?.validity) || "",
     },
