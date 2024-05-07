@@ -10,6 +10,7 @@ import { editInventorySchema } from "@/validation/inventory";
 import { convertFormatValidity } from "@/utils/convertFormatValidity";
 import { formatDateToDDMMYYYY } from "@/utils/formatDateToDDMMYYYY";
 import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
+import { convertDateToAmericanFormat } from "@/utils/convertDateToAmericanFormat";
 
 interface IModalEditInventoryProps {
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -35,7 +36,10 @@ export const ModalEditInventory = ({
           (currentInventory?.price * 100).toString() ?? ""
         ) || "",
       quantity: currentInventory?.quantity || "",
-      validity: formatDateToDDMMYYYY(currentInventory?.validity) || "",
+      validity:
+        convertDateToAmericanFormat(
+          formatDateToDDMMYYYY(currentInventory?.validity)
+        ) || "",
     },
     validationSchema: editInventorySchema,
     onSubmit: (values) => handleEditInventory(values),
