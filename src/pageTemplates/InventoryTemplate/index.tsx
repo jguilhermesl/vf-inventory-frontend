@@ -75,7 +75,9 @@ export const InventoryTemplate = () => {
       await editInventory(
         {
           ...values,
-          price: formatCurrencyToFloat(convertQuantityToReal(values.price)),
+          price: formatCurrencyToFloat(
+            convertQuantityToReal(values.price.toString())
+          ),
           validity: formatDDMMYYYYToDate(values.validity).toString(),
         },
         currentInventory.id
@@ -102,7 +104,7 @@ export const InventoryTemplate = () => {
     try {
       await addInventory({
         lot,
-        price: formatCurrencyToFloat(convertQuantityToReal(price)),
+        price: formatCurrencyToFloat(convertQuantityToReal(price.toString())),
         productId,
         quantity,
         validity: formatDateToDDMMYYYY(validity),

@@ -92,7 +92,9 @@ export const AutoCompleteInput = ({
       }` +
       `${
         itemFiltered?.price
-          ? `${convertQuantityToReal(itemFiltered?.price?.toString())} | `
+          ? `${convertQuantityToReal(
+              (itemFiltered?.price * 100).toString()
+            )} | `
           : ""
       }` +
       `${

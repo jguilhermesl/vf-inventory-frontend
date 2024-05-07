@@ -13,12 +13,11 @@ import {
 } from "@/constants/inventory";
 import { convertQuantityToReal } from "@/utils/convertQuantityToReal";
 import { convertRealToNumber } from "@/utils/convertRealToNumber";
-import { handleRemoveMask } from "@/utils/handleRemoveMask";
 import { handleToast } from "@/utils/handleToast";
 import { actionInventorySchema } from "@/validation/inventory";
 import { useFormik } from "formik";
 import { CheckCircle } from "phosphor-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const ActionInventoryTemplate = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -55,15 +54,18 @@ export const ActionInventoryTemplate = () => {
         customerName,
         customerPaymentType,
         quantity: values.quantity,
-        price: convertRealToNumber(values.price),
+        price: values.type === "output" ? values.price : null,
       };
 
-      formik.resetForm();
-      setAutoCompleteValue("");
       await actionInventory(data, values.inventoryId);
+      setAutoCompleteValue("");
+      formik.setFieldValue("quantity", 0);
+      formik.setFieldValue("customerName", "");
+      formik.setFieldValue("customerPaymentType", "");
+      formik.setFieldValue("inventoryId", "");
+      formik.setFieldValue("price", 0);
       handleToast("Ação realizada com sucesso.", "success");
     } catch (err) {
-      console.log(err);
       if (err.response.data.error == "Estoque não pode ficar negativo.") {
         handleToast("Estoque não pode ficar negativo.", "error");
         return;
@@ -104,14 +106,12 @@ export const ActionInventoryTemplate = () => {
           <form className="flex flex-col gap-4" onSubmit={formik.handleSubmit}>
             <Dropdown
               onValueChange={(value: string) => {
-                console.log("values", value);
                 formik.setFieldValue("type", value);
               }}
               options={MOCK_OPTIONS_ACTIONS_TYPE}
-              error={formik.errors?.type as string}
-              {...formik.getFieldProps("type")}
               label="Tipo da ação"
               placeholder="Selecione o tipo da ação"
+              {...formik.getFieldProps("type")}
             />
             {formik.values.type === "output" && (
               <>
@@ -157,7 +157,9 @@ export const ActionInventoryTemplate = () => {
                 {...formik.getFieldProps("price")}
                 placeholder="Digite o preço"
                 onChange={(e) => {
-                  const formattedValue = convertQuantityToReal(e.target.value);
+                  const formattedValue = convertQuantityToReal(
+                    e.target.value.toString()
+                  );
                   formik.setFieldValue("price", formattedValue);
                 }}
               />

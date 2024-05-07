@@ -18,7 +18,7 @@ export interface IAddInventoryBody {
 
 export interface IEditInventoryBody {
   lot: string;
-  price: number;
+  price: number | string;
   quantity: number;
   validity: string;
 }
