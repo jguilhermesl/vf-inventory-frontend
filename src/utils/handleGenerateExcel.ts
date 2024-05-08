@@ -1,3 +1,4 @@
+import { TRANSLATION } from "@/constants/translate";
 import * as XLSX from "xlsx";
 
 export const handleGenerateExcel = (content, tableTitle) => {
@@ -19,6 +20,23 @@ export const handleGenerateExcel = (content, tableTitle) => {
     .getHours()
     .toString()
     .padStart(2, "0")}:${currentDate.getMinutes().toString().padStart(2, "0")}`;
+
+  content.map((row) => {
+    const titles = Object.keys(row);
+
+    const rowFormatted = {};
+
+    titles.map((title) => {
+      const translatedTitle = TRANSLATION[title]
+      const value = row[title]
+
+      if (!translatedTitle) {
+        rowFormatted[title] = value
+      }
+
+      rowFormatted[translatedTitle] = value
+    });
+  });
 
   const ws = XLSX.utils.json_to_sheet(content);
   const wb = XLSX.utils.book_new();
