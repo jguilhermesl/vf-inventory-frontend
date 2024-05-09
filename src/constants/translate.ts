@@ -14,3 +14,12 @@ export const TRANSLATION = {
   productName: "Produto",
   role: "Cargo",
 };
+export const TRANSLATION_VALUE = {
+  input: "Entrada",
+  output: "Saída",
+  "credit-card": "Cartão de Crédito",
+  pix: "pix",
+  "debit-card": "Cartão de Débito",
+  prazo: "Prazo",
+  money: "Dinheiro",
+};
