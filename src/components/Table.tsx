@@ -55,7 +55,7 @@ export const Table = ({
   tableTitle,
   isLoading,
   totalPage,
-  handleGetItemsWithSearch = async () => {},
+  handleGetItemsWithSearch = async () => { },
   itemsSort = [],
   handleSortItems,
 }: ITableProps) => {
@@ -95,6 +95,8 @@ export const Table = ({
   useEffect(() => {
     handleSearch();
   }, [debouncedSearch, currentPage]);
+
+
 
   return (
     <div className="flex flex-col bg-white w-full px-2 lg:px-8 py-6 lg:rounded-2xl shadow-md border border-[#00000030] ">
@@ -204,9 +206,7 @@ export const Table = ({
                                 const formattedPrice = priceValue.toFixed(2);
                                 return (
                                   <Paragraph className="!text-base">
-                                    {convertQuantityToReal(
-                                      formattedPrice.toString()
-                                    )}
+                                    {item[title]}
                                   </Paragraph>
                                 );
 
